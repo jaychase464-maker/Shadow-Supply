@@ -4,9 +4,10 @@ Update this file after each meaningful development session.
 
 ## Current version
 
-- Current clean rewrite: `v0.2.1-inventory-hotfix`
+- Current clean rewrite: `v0.3.0-save-foundation`
 - Repository: `jaychase464-maker/Shadow-Supply`
 - Source-of-truth branch: `main`
+- Save schema version: `1`
 - Legacy v0.10.x work: historical design reference only
 - Experimental v0.11.x island rebuild: not the active project
 
@@ -35,11 +36,9 @@ Update this file after each meaningful development session.
 - Interaction framework
 - Development playground
 
-## Current milestone
-
 ### Milestone 2 — Items and Inventory
 
-- Inventory behavior verified locally
+- Verified working locally
 - Stable item definitions
 - Item categories, quality, and condition
 - Stackable inventory
@@ -48,42 +47,58 @@ Update this file after each meaningful development session.
 - Held-item display
 - Dropping items
 - Development inventory UI
-- Dropped-item physics hotfix awaiting verification
+- Dropped-item physics hotfix committed
+
+## Current milestone
+
+### Milestone 3 — Save and Load Foundation
+
+- Versioned save files
+- Three save slots
+- Player transform persistence
+- Inventory persistence by item ID
+- Hotbar persistence
+- World-pickup persistence
+- Dropped-item physics-state persistence
+- Save-slot metadata
+- Development save HUD
 
 ## Current compilation state
 
-- Milestone 2 reported working locally
-- No compilation error was reported
-- `v0.2.1` dropped-item physics hotfix pending local test
+- Milestone 1 and Milestone 2 reported working
+- No compilation errors were reported before Milestone 3
+- Milestone 3 package revision 2 prepared after resolving `CS0104`
+- Local compilation and acceptance testing pending
 
 ## Current known risks
 
-- Save data has not been implemented yet.
-- The inventory UI is a temporary development interface.
-- Runtime fallback meshes are placeholders until final item models are assigned.
-- Display prefabs will need correctly sized production colliders later.
+- Save schema migrations have not yet been needed.
+- The save and inventory interfaces are temporary development interfaces.
+- Runtime fallback meshes are placeholders.
+- Production item prefabs will need correctly sized colliders.
 - The repository only reflects committed and pushed local changes.
 
 ## Next planned work
 
-1. Verify dropped items fall, collide, and tumble correctly.
-2. Commit and push the hotfix.
-3. Mark BUG-004 resolved with the hotfix commit hash.
-4. Implement a versioned save architecture.
-5. Serialize inventory using stable item IDs.
-6. Add save-slot metadata and player transform persistence.
-7. Build persistent world-item foundations before placement and electrical systems.
+1. Validate all three save slots.
+2. Verify player, inventory, hotbar, and world-item restoration.
+3. Commit and push Milestone 3.
+4. Begin persistent furniture placement.
+5. Integrate placed objects into save schema version `1` without changing existing fields.
+6. Build floor placement before wall placement and electrical objects.
 
 ## Session log
 
 ### 2026-07-13
 
 - Changes:
-  - Verified Milestone 1 locally.
-  - Added Milestone 2 inventory implementation.
-  - Prepared dropped-item physics hotfix.
+  - Verified Milestone 1.
+  - Added and verified Milestone 2 inventory behavior.
+  - Committed the dropped-item physics hotfix.
+  - Prepared Milestone 3 save and load foundation.
+  - Corrected ambiguous `Random` reference in `WorldItemPickup.cs`.
 - Tests performed:
   - Milestone 1 passed local playtesting.
   - Milestone 2 inventory systems passed local playtesting.
-  - Dropped items were reported floating instead of falling.
-  - Physics hotfix testing pending.
+  - Initial Milestone 3 package reported `CS0104` in `WorldItemPickup.cs`.
+  - Corrected package testing pending.

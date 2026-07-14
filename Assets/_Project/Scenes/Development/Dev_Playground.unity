@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2daca957306f61d4baa617557a0c575d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  persistentId: bb0a2d65aee741d8bb880e147ccb54a2
   item: {fileID: 11400000, guid: ddf61ce6224513848b4b14d865c65795, type: 2}
   quantity: 3
   quality: 1
@@ -291,6 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2daca957306f61d4baa617557a0c575d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  persistentId: 727a3ee6778b4e35abe62a0eff7c4d1d
   item: {fileID: 11400000, guid: a732b9f88a74ba24caa9a4776c4d0da9, type: 2}
   quantity: 6
   quality: 1
@@ -453,6 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2daca957306f61d4baa617557a0c575d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  persistentId: 75691293ab244ba4bc766929947e2ec6
   item: {fileID: 11400000, guid: 3e576304997ada34a98037f2e9511b12, type: 2}
   quantity: 12
   quality: 1
@@ -578,6 +581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2daca957306f61d4baa617557a0c575d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  persistentId: 9f5fb5437b724da7b3be9e16f914668b
   item: {fileID: 11400000, guid: ddf61ce6224513848b4b14d865c65795, type: 2}
   quantity: 4
   quality: 1
@@ -795,6 +799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2daca957306f61d4baa617557a0c575d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  persistentId: 5df908eaaefd445da0b5f7c751763327
   item: {fileID: 11400000, guid: 3e576304997ada34a98037f2e9511b12, type: 2}
   quantity: 16
   quality: 1
@@ -1647,6 +1652,8 @@ GameObject:
   - component: {fileID: 1420558007}
   - component: {fileID: 1420558006}
   - component: {fileID: 1420558009}
+  - component: {fileID: 1420558011}
+  - component: {fileID: 1420558010}
   m_Layer: 0
   m_Name: RuntimeServices
   m_TagString: Untagged
@@ -1711,6 +1718,39 @@ MonoBehaviour:
   inventory: {fileID: 0}
   hotbar: {fileID: 0}
   firstPersonController: {fileID: 0}
+--- !u!114 &1420558010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420558005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5b87887876981243ad9e03b4d19d78a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveManager: {fileID: 1420558011}
+  statusDuration: 4
+--- !u!114 &1420558011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420558005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e92ebf8cb646e4293dab12bcd5c012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 11400000, guid: fe0a045d0147e6240a0a49daefe23c3f, type: 2}
+  playerTransform: {fileID: 1139476483}
+  playerInventory: {fileID: 1139476486}
+  hotbarController: {fileID: 1139476484}
+  firstPersonController: {fileID: 1139476481}
+  activeSlot: 1
+  slotCount: 3
 --- !u!1 &1423423598
 GameObject:
   m_ObjectHideFlags: 0
@@ -1758,6 +1798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2daca957306f61d4baa617557a0c575d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  persistentId: c01e5b54541a494c8c44e7d6213d8462
   item: {fileID: 11400000, guid: 6f64552f79f008b41bc973e1510d24e4, type: 2}
   quantity: 1
   quality: 1

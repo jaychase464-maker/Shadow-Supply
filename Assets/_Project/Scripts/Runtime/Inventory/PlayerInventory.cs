@@ -8,7 +8,8 @@ namespace ShadowSupply.Inventory
     {
         [SerializeField, Min(1)] private int slotCount = 24;
         [SerializeField, Min(1)] private int hotbarSize = 8;
-        [SerializeField] private List<InventorySlot> slots = new List<InventorySlot>();
+        [SerializeField] private List<InventorySlot> slots =
+            new List<InventorySlot>();
 
         public event Action Changed;
 
@@ -29,7 +30,9 @@ namespace ShadowSupply.Inventory
 
         public InventorySlot GetSlot(int index)
         {
-            return index >= 0 && index < slots.Count ? slots[index] : null;
+            return index >= 0 && index < slots.Count
+                ? slots[index]
+                : null;
         }
 
         public int AddItem(
@@ -46,7 +49,9 @@ namespace ShadowSupply.Inventory
 
             InitializeSlots();
 
-            ItemStack incoming = new ItemStack(item, quantity, quality, condition);
+            ItemStack incoming =
+                new ItemStack(item, quantity, quality, condition);
+
             int remaining = quantity;
 
             for (int i = 0; i < slots.Count && remaining > 0; i++)
@@ -70,8 +75,18 @@ namespace ShadowSupply.Inventory
                     continue;
                 }
 
-                int amountForSlot = Mathf.Min(item.MaximumStack, remaining);
-                slot.Set(new ItemStack(item, amountForSlot, quality, condition));
+                int amountForSlot =
+                    Mathf.Min(item.MaximumStack, remaining);
+
+                slot.Set(
+                    new ItemStack(
+                        item,
+                        amountForSlot,
+                        quality,
+                        condition
+                    )
+                );
+
                 remaining -= amountForSlot;
             }
 
@@ -92,26 +107,25 @@ namespace ShadowSupply.Inventory
                 return null;
             }
 
-            int removed = Mathf.Min(quantity, slot.Stack.Quantity);
-            ItemStack result = slot.Stack.Clone(removed);
+            int removed =
+                Mathf.Min(quantity, slot.Stack.Quantity);
+
+            ItemStack result =
+                slot.Stack.Clone(removed);
+
             slot.Stack.Remove(removed);
             Changed?.Invoke();
             return result;
         }
 
-        public bool HasSpaceFor(
-            ItemDefinition item,
-            int quantity,
-            ItemQuality quality = ItemQuality.Standard,
-            float condition = 1f
-        )
+        public bool HasSpaceFor(ItemDefinition item, int quantity)
         {
             if (item == null || quantity <= 0)
             {
                 return false;
             }
 
-            ItemStack incoming = new ItemStack(item, quantity, quality, condition);
+            InitializeSlots();
             int capacity = 0;
 
             foreach (InventorySlot slot in slots)
@@ -120,9 +134,11 @@ namespace ShadowSupply.Inventory
                 {
                     capacity += item.MaximumStack;
                 }
-                else if (slot.Stack.CanStackWith(incoming))
+                else if (slot.Stack.Item == item)
                 {
-                    capacity += item.MaximumStack - slot.Stack.Quantity;
+                    capacity +=
+                        item.MaximumStack -
+                        slot.Stack.Quantity;
                 }
 
                 if (capacity >= quantity)
@@ -132,6 +148,45 @@ namespace ShadowSupply.Inventory
             }
 
             return false;
+        }
+
+        public void RestoreSlots(
+            IReadOnlyList<ItemStack> restoredStacks
+        )
+        {
+            InitializeSlots();
+
+            for (int i = 0; i < slots.Count; i++)
+            {
+                ItemStack restored =
+                    restoredStacks != null &&
+                    i < restoredStacks.Count
+                        ? restoredStacks[i]
+                        : null;
+
+                if (restored == null || restored.IsEmpty)
+                {
+                    slots[i].Clear();
+                }
+                else
+                {
+                    slots[i].Set(restored);
+                }
+            }
+
+            Changed?.Invoke();
+        }
+
+        public void ClearAll()
+        {
+            InitializeSlots();
+
+            foreach (InventorySlot slot in slots)
+            {
+                slot.Clear();
+            }
+
+            Changed?.Invoke();
         }
 
         private void InitializeSlots()
@@ -145,7 +200,10 @@ namespace ShadowSupply.Inventory
 
             if (slots.Count > slotCount)
             {
-                slots.RemoveRange(slotCount, slots.Count - slotCount);
+                slots.RemoveRange(
+                    slotCount,
+                    slots.Count - slotCount
+                );
             }
 
             for (int i = 0; i < slots.Count; i++)

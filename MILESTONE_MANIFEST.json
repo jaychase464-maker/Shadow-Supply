@@ -1,7 +1,25 @@
 {
-  "name": "ShadowSupply_Milestone2_Inventory",
-  "version": "v0.2.0-inventory",
+  "name": "ShadowSupply_Milestone3_SaveLoad",
+  "version": "v0.3.0-save-foundation",
+  "save_schema_version": 1,
   "unity_version": "6000.0.58f2",
   "extract_to": "Unity project root",
-  "setup_menu": "Shadow Supply/Setup/Apply Milestone 2 Inventory"
+  "files": [
+    "Assets/_Project/Scripts/Editor/Milestone3SaveSetup.cs",
+    "Assets/_Project/Scripts/Runtime/Inventory/ItemDatabase.cs",
+    "Assets/_Project/Scripts/Runtime/Inventory/PlayerInventory.cs",
+    "Assets/_Project/Scripts/Runtime/Inventory/WorldItemPickup.cs",
+    "Assets/_Project/Scripts/Runtime/Player/FirstPersonController.cs",
+    "Assets/_Project/Scripts/Runtime/SaveSystem/SaveDataModels.cs",
+    "Assets/_Project/Scripts/Runtime/SaveSystem/SaveManager.cs",
+    "Assets/_Project/Scripts/Runtime/UI/SaveSystemHUD.cs",
+    "BUGS.md",
+    "CHANGELOG.md",
+    "CURRENT_STATUS.md",
+    "DISCORD_MILESTONE_03.md",
+    "DISCORD_MILESTONE_03_COMPILE_HOTFIX.md",
+    "Documentation/HOTFIX_MILESTONE_03_PACKAGE_REVISION_2.md",
+    "Documentation/MILESTONE_03_SAVE_LOAD.md"
+  ],
+  "package_revision": 2
 }

@@ -4,67 +4,53 @@ Use one entry per bug.
 
 ## Active bugs
 
-### BUG-004 — Dropped inventory items float instead of falling
+No active clean-rewrite bugs are currently recorded.
 
-- Status: Fix prepared; local verification pending
-- Severity: Medium
-- Reported version: `v0.2.0-inventory`
-- Scene: `Assets/_Project/Scenes/Development/Dev_Playground.unity`
-- Affected scripts:
-  - `Assets/_Project/Scripts/Runtime/Inventory/WorldItemPickup.cs`
-- Reproduction steps:
-  1. Pick up an item.
-  2. Select its hotbar slot.
-  3. Press `Q` to drop one item.
-- Expected:
-  - The dropped item is released as a dynamic physics object.
-  - Gravity pulls it to the ground.
-  - Initial force and torque make it tumble naturally.
-- Actual:
-  - The item remains suspended near the drop position.
-- Fix prepared:
-  - Explicitly enable gravity and dynamic Rigidbody state.
-  - Clear inherited Rigidbody constraints.
-  - Enable collision detection and interpolation.
-  - Add a solid collider when a display prefab has none.
-  - Apply initial force and randomized torque.
-  - Wake the Rigidbody immediately after configuration.
-
-## Previously reported bugs
+## Historical reports
 
 ### BUG-001 — Wall outlets face the wrong direction
 
-- Status: Historical legacy-project report; not present in the active clean rewrite
+- Status: Historical legacy-project report
 - Area: Electrical placement
-- Likely affected assets:
-  - Outlet prefab
-  - `PowerOutlet.cs`
-  - Scene-builder placement rotation
+- The active clean rewrite has not implemented this system yet.
 
 ### BUG-002 — Electrical connectors do not insert correctly
 
-- Status: Historical legacy-project report; not present in the active clean rewrite
+- Status: Historical legacy-project report
 - Area: Physical plug system
-- Likely affected scripts:
-  - `MachinePowerConnection.cs`
-  - `PowerCableVisual.cs`
-  - Outlet and connector snap transforms
+- The active clean rewrite has not implemented this system yet.
 
 ### BUG-003 — Entrance door blocked by electrical panels
 
-- Status: Historical legacy-project report; not present in the active clean rewrite
-- Area: Starter property scene layout
-- Likely affected assets:
-  - Garage scene
-  - Electrical-panel placement
-  - Scene builder
+- Status: Historical legacy-project report
+- Area: Starter property layout
+- The active clean rewrite has not implemented this scene yet.
 
-## Resolved bugs
+## Resolved or fix committed
 
-Move verified fixed bugs here and include:
+### BUG-004 — Dropped inventory items float instead of falling
 
-- Fixed version
-- Commit hash
-- Files changed
-- Summary of fix
-- Regression tests
+- Status: Fix committed; regression test should remain in inventory acceptance tests
+- Reported version: `v0.2.0-inventory`
+- Fixed version: `v0.2.1-inventory-hotfix`
+- Commit: `d7d8463a6ed16a61bb36df8d54d03ccc0b91fbb5`
+- Affected script:
+  - `Assets/_Project/Scripts/Runtime/Inventory/WorldItemPickup.cs`
+- Fix:
+  - Explicit gravity and dynamic Rigidbody state
+  - Cleared constraints
+  - Continuous collision detection
+  - Solid fallback collider
+  - Initial force and randomized torque
+
+### BUG-005 — Ambiguous `Random` reference prevents Milestone 3 compilation
+
+- Status: Fixed in Milestone 3 package revision 2
+- Severity: High
+- Reported version: `v0.3.0-save-foundation` package revision 1
+- Affected script:
+  - `Assets/_Project/Scripts/Runtime/Inventory/WorldItemPickup.cs`
+- Compiler error:
+  - `CS0104: 'Random' is an ambiguous reference between 'UnityEngine.Random' and 'System.Random'`
+- Fix:
+  - Replaced `Random.rotation` with `UnityEngine.Random.rotation`.

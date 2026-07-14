@@ -31,12 +31,14 @@ namespace ShadowSupply.Player
         [SerializeField] private LayerMask obstructionMask = ~0;
 
         private CharacterController characterController;
+
         private InputAction moveAction;
         private InputAction lookAction;
         private InputAction jumpAction;
         private InputAction sprintAction;
         private InputAction crouchAction;
         private InputAction cursorAction;
+
         private Vector3 horizontalVelocity;
         private float verticalVelocity;
         private float cameraPitch;
@@ -44,16 +46,22 @@ namespace ShadowSupply.Player
         private bool wantsToCrouch;
         private bool inputInitialized;
 
-        public bool IsCursorLocked => Cursor.lockState == CursorLockMode.Locked;
+        public bool IsCursorLocked =>
+            Cursor.lockState == CursorLockMode.Locked;
+
         public bool IsCrouching { get; private set; }
+        public float CameraPitch => cameraPitch;
 
         private void Awake()
         {
-            characterController = GetComponent<CharacterController>();
+            characterController =
+                GetComponent<CharacterController>();
 
             if (cameraTransform == null)
             {
-                Camera childCamera = GetComponentInChildren<Camera>(true);
+                Camera childCamera =
+                    GetComponentInChildren<Camera>(true);
+
                 if (childCamera != null)
                 {
                     cameraTransform = childCamera.transform;
@@ -62,14 +70,21 @@ namespace ShadowSupply.Player
 
             if (cameraTransform == null)
             {
-                Debug.LogError("[FirstPersonController] A child Camera is required.", this);
+                Debug.LogError(
+                    "[FirstPersonController] A child Camera is required.",
+                    this
+                );
+
                 enabled = false;
                 return;
             }
 
-            standingCameraLocalY = cameraTransform.localPosition.y;
+            standingCameraLocalY =
+                cameraTransform.localPosition.y;
+
             characterController.height = standingHeight;
-            characterController.center = Vector3.up * (standingHeight * 0.5f);
+            characterController.center =
+                Vector3.up * (standingHeight * 0.5f);
 
             BuildInputActions();
             SetCursorLocked(true);
@@ -131,51 +146,108 @@ namespace ShadowSupply.Player
             }
         }
 
+        public void SetViewRotation(float yaw, float pitch)
+        {
+            cameraPitch = Mathf.Clamp(
+                pitch,
+                minimumPitch,
+                maximumPitch
+            );
+
+            transform.rotation =
+                Quaternion.Euler(0f, yaw, 0f);
+
+            if (cameraTransform != null)
+            {
+                cameraTransform.localRotation =
+                    Quaternion.Euler(cameraPitch, 0f, 0f);
+            }
+        }
+
         private void BuildInputActions()
         {
-            moveAction = new InputAction("Move", InputActionType.Value);
+            moveAction =
+                new InputAction("Move", InputActionType.Value);
+
             moveAction.AddCompositeBinding("2DVector")
                 .With("Up", "<Keyboard>/w")
                 .With("Down", "<Keyboard>/s")
                 .With("Left", "<Keyboard>/a")
                 .With("Right", "<Keyboard>/d");
+
             moveAction.AddCompositeBinding("2DVector")
                 .With("Up", "<Keyboard>/upArrow")
                 .With("Down", "<Keyboard>/downArrow")
                 .With("Left", "<Keyboard>/leftArrow")
                 .With("Right", "<Keyboard>/rightArrow");
+
             moveAction.AddBinding("<Gamepad>/leftStick");
 
-            lookAction = new InputAction("Look", InputActionType.Value);
+            lookAction =
+                new InputAction("Look", InputActionType.Value);
+
             lookAction.AddBinding("<Mouse>/delta");
             lookAction.AddBinding("<Gamepad>/rightStick");
 
-            jumpAction = new InputAction("Jump", InputActionType.Button, "<Keyboard>/space");
+            jumpAction = new InputAction(
+                "Jump",
+                InputActionType.Button,
+                "<Keyboard>/space"
+            );
+
             jumpAction.AddBinding("<Gamepad>/buttonSouth");
 
-            sprintAction = new InputAction("Sprint", InputActionType.Button, "<Keyboard>/leftShift");
+            sprintAction = new InputAction(
+                "Sprint",
+                InputActionType.Button,
+                "<Keyboard>/leftShift"
+            );
+
             sprintAction.AddBinding("<Gamepad>/leftStickPress");
 
-            crouchAction = new InputAction("Crouch", InputActionType.Button, "<Keyboard>/leftCtrl");
+            crouchAction = new InputAction(
+                "Crouch",
+                InputActionType.Button,
+                "<Keyboard>/leftCtrl"
+            );
+
             crouchAction.AddBinding("<Keyboard>/c");
             crouchAction.AddBinding("<Gamepad>/buttonEast");
 
-            cursorAction = new InputAction("Toggle Cursor", InputActionType.Button, "<Keyboard>/escape");
+            cursorAction = new InputAction(
+                "Toggle Cursor",
+                InputActionType.Button,
+                "<Keyboard>/escape"
+            );
+
             inputInitialized = true;
         }
 
         private void HandleMovement()
         {
-            Vector2 moveInput = moveAction.ReadValue<Vector2>();
-            Vector3 desiredDirection = transform.right * moveInput.x + transform.forward * moveInput.y;
-            desiredDirection = Vector3.ClampMagnitude(desiredDirection, 1f);
+            Vector2 moveInput =
+                moveAction.ReadValue<Vector2>();
+
+            Vector3 desiredDirection =
+                transform.right * moveInput.x +
+                transform.forward * moveInput.y;
+
+            desiredDirection =
+                Vector3.ClampMagnitude(desiredDirection, 1f);
 
             float targetSpeed = IsCrouching
                 ? crouchSpeed
-                : sprintAction.IsPressed() ? sprintSpeed : walkSpeed;
+                : sprintAction.IsPressed()
+                    ? sprintSpeed
+                    : walkSpeed;
 
-            Vector3 desiredVelocity = desiredDirection * targetSpeed;
-            float control = characterController.isGrounded ? acceleration : airControl;
+            Vector3 desiredVelocity =
+                desiredDirection * targetSpeed;
+
+            float control =
+                characterController.isGrounded
+                    ? acceleration
+                    : airControl;
 
             horizontalVelocity = Vector3.MoveTowards(
                 horizontalVelocity,
@@ -183,37 +255,81 @@ namespace ShadowSupply.Player
                 control * Time.deltaTime
             );
 
-            if (characterController.isGrounded && verticalVelocity < 0f)
+            if (
+                characterController.isGrounded &&
+                verticalVelocity < 0f
+            )
             {
                 verticalVelocity = -2f;
             }
 
-            if (characterController.isGrounded && !IsCrouching && jumpAction.WasPressedThisFrame())
+            if (
+                characterController.isGrounded &&
+                !IsCrouching &&
+                jumpAction.WasPressedThisFrame()
+            )
             {
-                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                verticalVelocity =
+                    Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
 
             verticalVelocity += gravity * Time.deltaTime;
-            Vector3 finalVelocity = horizontalVelocity + Vector3.up * verticalVelocity;
-            characterController.Move(finalVelocity * Time.deltaTime);
+
+            Vector3 finalVelocity =
+                horizontalVelocity +
+                Vector3.up * verticalVelocity;
+
+            characterController.Move(
+                finalVelocity * Time.deltaTime
+            );
         }
 
         private void HandleLook()
         {
-            Vector2 lookInput = lookAction.ReadValue<Vector2>();
-            bool usingMouse = lookAction.activeControl?.device is Mouse;
+            Vector2 lookInput =
+                lookAction.ReadValue<Vector2>();
 
-            float yaw = usingMouse
-                ? lookInput.x * mouseSensitivity
-                : lookInput.x * gamepadLookSpeed * Time.deltaTime;
+            bool usingMouse =
+                lookAction.activeControl?.device is Mouse;
 
-            float pitch = usingMouse
-                ? lookInput.y * mouseSensitivity
-                : lookInput.y * gamepadLookSpeed * Time.deltaTime;
+            float yaw;
+            float pitch;
 
-            cameraPitch = Mathf.Clamp(cameraPitch - pitch, minimumPitch, maximumPitch);
-            cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0f, 0f);
-            transform.Rotate(Vector3.up, yaw, Space.World);
+            if (usingMouse)
+            {
+                yaw =
+                    lookInput.x * mouseSensitivity;
+
+                pitch =
+                    lookInput.y * mouseSensitivity;
+            }
+            else
+            {
+                yaw =
+                    lookInput.x *
+                    gamepadLookSpeed *
+                    Time.deltaTime;
+
+                pitch =
+                    lookInput.y *
+                    gamepadLookSpeed *
+                    Time.deltaTime;
+            }
+
+            cameraPitch = Mathf.Clamp(
+                cameraPitch - pitch,
+                minimumPitch,
+                maximumPitch
+            );
+
+            cameraTransform.localRotation =
+                Quaternion.Euler(cameraPitch, 0f, 0f);
+
+            transform.Rotate(
+                Vector3.up,
+                yaw,
+                Space.World
+            );
         }
 
         private void HandleCrouch()
@@ -223,12 +339,20 @@ namespace ShadowSupply.Player
                 wantsToCrouch = !wantsToCrouch;
             }
 
-            if (!wantsToCrouch && IsCrouching && !HasStandingClearance())
+            if (
+                !wantsToCrouch &&
+                IsCrouching &&
+                !HasStandingClearance()
+            )
             {
                 wantsToCrouch = true;
             }
 
-            float targetHeight = wantsToCrouch ? crouchingHeight : standingHeight;
+            float targetHeight =
+                wantsToCrouch
+                    ? crouchingHeight
+                    : standingHeight;
+
             float nextHeight = Mathf.MoveTowards(
                 characterController.height,
                 targetHeight,
@@ -236,21 +360,45 @@ namespace ShadowSupply.Player
             );
 
             characterController.height = nextHeight;
-            characterController.center = Vector3.up * (nextHeight * 0.5f);
+            characterController.center =
+                Vector3.up * (nextHeight * 0.5f);
 
-            float crouchRatio = Mathf.InverseLerp(crouchingHeight, standingHeight, nextHeight);
-            Vector3 cameraLocalPosition = cameraTransform.localPosition;
-            cameraLocalPosition.y = Mathf.Lerp(crouchingHeight - 0.12f, standingCameraLocalY, crouchRatio);
-            cameraTransform.localPosition = cameraLocalPosition;
+            float crouchRatio = Mathf.InverseLerp(
+                crouchingHeight,
+                standingHeight,
+                nextHeight
+            );
 
-            IsCrouching = nextHeight < standingHeight - 0.02f;
+            Vector3 cameraLocalPosition =
+                cameraTransform.localPosition;
+
+            cameraLocalPosition.y = Mathf.Lerp(
+                crouchingHeight - 0.12f,
+                standingCameraLocalY,
+                crouchRatio
+            );
+
+            cameraTransform.localPosition =
+                cameraLocalPosition;
+
+            IsCrouching =
+                nextHeight < standingHeight - 0.02f;
         }
 
         private bool HasStandingClearance()
         {
-            float radius = Mathf.Max(characterController.radius - 0.02f, 0.05f);
-            Vector3 bottom = transform.position + Vector3.up * radius;
-            Vector3 top = transform.position + Vector3.up * (standingHeight - radius);
+            float radius = Mathf.Max(
+                characterController.radius - 0.02f,
+                0.05f
+            );
+
+            Vector3 bottom =
+                transform.position +
+                Vector3.up * radius;
+
+            Vector3 top =
+                transform.position +
+                Vector3.up * (standingHeight - radius);
 
             return !Physics.CheckCapsule(
                 bottom,
@@ -263,7 +411,10 @@ namespace ShadowSupply.Player
 
         private static void SetCursorLocked(bool locked)
         {
-            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.lockState = locked
+                ? CursorLockMode.Locked
+                : CursorLockMode.None;
+
             Cursor.visible = !locked;
         }
     }
