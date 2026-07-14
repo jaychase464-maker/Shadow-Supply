@@ -1,5 +1,7 @@
 {
-  "name": "ShadowSupply_Milestone1_Foundation",
+  "name": "ShadowSupply_Milestone2_Inventory",
+  "version": "v0.2.0-inventory",
   "unity_version": "6000.0.58f2",
-  "extract_to": "Unity project root"
+  "extract_to": "Unity project root",
+  "setup_menu": "Shadow Supply/Setup/Apply Milestone 2 Inventory"
 }
