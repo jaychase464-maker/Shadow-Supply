@@ -1,28 +1,11 @@
 {
-  "name": "ShadowSupply_v0.3.1_InventoryUIRedesign",
-  "version": "v0.3.1-inventory-ui",
+  "name": "ShadowSupply_v0.3.1_InventoryCursorHotfix",
+  "version": "v0.3.1-inventory-ui-hotfix",
   "unity_version": "6000.0.58f2",
-  "save_schema_version": 1,
   "extract_to": "Unity project root",
-  "setup_menu": "Shadow Supply/Setup/Apply Inventory UI Redesign",
   "files": [
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/Icons/ITEM_BasicToolkit.png",
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/Icons/ITEM_FlashDrive.png",
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/Icons/ITEM_MetalComponents.png",
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/Icons/ITEM_OutletAdapter.png",
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/Icons/ITEM_PolymerHousing.png",
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/Icons/ITEM_PowerCable.png",
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/Icons/ITEM_SealedPackage.png",
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/InventoryScreen.uss",
-    "Assets/_Project/Resources/ShadowSupply/UI/Inventory/InventoryScreen.uxml",
-    "Assets/_Project/Scripts/Editor/InventoryUIRedesignSetup.cs",
-    "Assets/_Project/Scripts/Runtime/Inventory/HotbarController.cs",
-    "Assets/_Project/Scripts/Runtime/Inventory/PlayerInventory.cs",
     "Assets/_Project/Scripts/Runtime/UI/InventoryHUD.cs",
-    "CHANGELOG.md",
-    "CURRENT_STATUS.md",
-    "DISCORD_INVENTORY_UI_v0.3.1.md",
-    "Documentation/INVENTORY_UI_REDESIGN_v0.3.1.md",
-    "Documentation/References/ShadowSupply_Inventory_UI_Concept.png"
+    "Documentation/INVENTORY_CURSOR_HOTFIX_v0.3.1.md",
+    "DISCORD_INVENTORY_CURSOR_HOTFIX_v0.3.1.md"
   ]
 }

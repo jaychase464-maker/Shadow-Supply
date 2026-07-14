@@ -492,8 +492,8 @@ namespace ShadowSupply.UI
                     hotbar.enabled = false;
                 }
 
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                UnityEngine.Cursor.lockState = CursorLockMode.None;
+                UnityEngine.Cursor.visible = true;
 
                 selectedInventoryIndex =
                     hotbar != null
@@ -521,8 +521,8 @@ namespace ShadowSupply.UI
                     hotbar.enabled = true;
                 }
 
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+                UnityEngine.Cursor.visible = false;
             }
 
             RefreshAll();
