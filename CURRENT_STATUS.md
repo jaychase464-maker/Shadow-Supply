@@ -1,57 +1,50 @@
 # Shadow Supply — Current Status
 
-Update this file after each meaningful development session.
-
 ## Current version
 
-- Working version: v0.10.2 legacy project
-- Experimental rebuild: v0.11.x island rebuild
-- Source of truth: Replace this line with the exact project/branch after import
+- Active rewrite: `v0.1.0-foundation`
+- Repository: `jaychase464-maker/Shadow-Supply`
+- Source-of-truth branch: `main`
+- Legacy builds: design references only
 
 ## Unity version
 
-- Replace with the exact Unity editor version used by the working project
+- Unity Editor: `6000.0.58f2`
+- Revision: `92dee566b325`
 
 ## Package versions
 
-- Input System: Replace with installed version
-- URP: Replace with installed version
-- Other critical packages: Add here
-
-## Last known working scene
-
-- Replace with exact scene path
+- Universal Render Pipeline: `17.0.4`
+- Input System: `1.14.2`
+- AI Navigation: `2.0.9`
+- uGUI: `2.0.0`
 
 ## Current milestone
 
-- Legacy systems preservation and repository migration
-- New island/world integration pending proper merge into the legacy project
+- Milestone 1 — Playable Foundation
 
 ## Current compilation state
 
-- Replace with current errors or write: No compilation errors
+- Awaiting local compilation and playground test after Milestone 1 import
 
-## Current known risks
+## Current playable scope
 
-- The experimental v0.11 rebuild did not contain every legacy system.
-- Input System package compatibility must match the installed Unity version.
-- Large art assets require selective import and optimization.
-- Save compatibility must be protected when serialized structures change.
+- First-person movement
+- Mouse/gamepad look
+- Sprint
+- Jump
+- Crouch
+- Cursor locking
+- Interaction raycast
+- Interaction prompt
+- Test interactable
+- Generated development playground
 
 ## Next planned work
 
-1. Import the exact latest working Unity project into this repository.
-2. Confirm the project compiles with no package errors.
-3. Document the real script and prefab paths.
-4. Validate electrical persistence and physical plug connections.
-5. Merge the new island/map into the legacy project instead of replacing it.
-6. Integrate selected realistic art assets using optimized prefabs and materials.
-
-## Session log
-
-### YYYY-MM-DD
-
-- Changes:
-- Files modified:
-- Tests performed:
-- Remaining issues:
+1. Validate Milestone 1 locally.
+2. Commit Unity-generated `.meta`, scene, and material files.
+3. Build item definitions and inventory.
+4. Add held-item visuals and hotbar.
+5. Design save architecture before placement and electrical systems.
+6. Build the starter garage vertical slice before the full island.
