@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bae1f4bf4affe814da455c745759da15, type: 3}
+  m_Name: PLACEABLE_DevUtilityCabinet
+  m_EditorClassIdentifier: 
+  placeableId: 76b9abdbeeef4b04b9d1d12dec319df0
+  displayName: Utility Cabinet
+  description: A lockable cabinet foundation for tools and restricted supplies.
+  prefab: {fileID: 6515469104044121674, guid: 5a6ba2ffa78abe540a2c9ed15d1ac5c1, type: 3}
+  surfaceType: 0
+  boundsCenter: {x: 0, y: 0.75, z: 0}
+  boundsSize: {x: 1.15, y: 1.5, z: 0.55}
+  gridSize: 0.25
+  rotationStep: 15
+  maximumSlope: 20

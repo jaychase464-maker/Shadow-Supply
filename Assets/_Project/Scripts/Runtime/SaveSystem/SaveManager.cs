@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using ShadowSupply.Inventory;
 using ShadowSupply.Player;
+using ShadowSupply.Placement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,14 +13,15 @@ namespace ShadowSupply.SaveSystem
     [DefaultExecutionOrder(-500)]
     public sealed class SaveManager : MonoBehaviour
     {
-        public const int CurrentSaveVersion = 1;
+        public const int CurrentSaveVersion = 2;
         public const string CurrentGameVersion =
-            "v0.3.0-save-foundation";
+            "v0.4.0-placement-foundation";
 
         public static SaveManager Instance { get; private set; }
 
-        [Header("Database")]
+        [Header("Databases")]
         [SerializeField] private ItemDatabase itemDatabase;
+        [SerializeField] private PlaceableDatabase placeableDatabase;
 
         [Header("Scene References")]
         [SerializeField] private Transform playerTransform;
@@ -91,6 +93,13 @@ namespace ShadowSupply.SaveSystem
                 player != null
                     ? player.GetComponent<FirstPersonController>()
                     : null;
+        }
+
+        public void ConfigurePlacementDatabase(
+            PlaceableDatabase database
+        )
+        {
+            placeableDatabase = database;
         }
 
         public void SetActiveSlot(int slot)
@@ -229,6 +238,8 @@ namespace ShadowSupply.SaveSystem
                     PublishStatus(error, false);
                     return false;
                 }
+
+                MigrateSaveData(data);
 
                 string targetScene =
                     data.metadata != null
@@ -371,7 +382,9 @@ namespace ShadowSupply.SaveSystem
                 inventory =
                     CaptureInventory(),
                 worldItems =
-                    CaptureWorldItems()
+                    CaptureWorldItems(),
+                placedObjects =
+                    CapturePlacedObjects()
             };
 
             return data;
@@ -492,6 +505,54 @@ namespace ShadowSupply.SaveSystem
             return data;
         }
 
+        private List<PlacedObjectSaveData> CapturePlacedObjects()
+        {
+            List<PlacedObjectSaveData> data =
+                new List<PlacedObjectSaveData>();
+
+            PlacedObject[] placedObjects =
+                FindObjectsByType<PlacedObject>(
+                    FindObjectsInactive.Exclude,
+                    FindObjectsSortMode.None
+                );
+
+            foreach (PlacedObject placedObject in placedObjects)
+            {
+                if (
+                    placedObject == null ||
+                    placedObject.Definition == null ||
+                    string.IsNullOrWhiteSpace(
+                        placedObject.Definition.PlaceableId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                placedObject.EnsurePersistentId();
+
+                data.Add(
+                    new PlacedObjectSaveData
+                    {
+                        persistentId =
+                            placedObject.PersistentId,
+                        placeableId =
+                            placedObject.Definition.PlaceableId,
+                        position =
+                            new Vector3SaveData(
+                                placedObject.transform.position
+                            ),
+                        rotation =
+                            new QuaternionSaveData(
+                                placedObject.transform.rotation
+                            )
+                    }
+                );
+            }
+
+            return data;
+        }
+
         private void ApplySaveData(SaveGameData data)
         {
             ResolveSceneReferences();
@@ -505,8 +566,10 @@ namespace ShadowSupply.SaveSystem
                 return;
             }
 
+            MigrateSaveData(data);
             RestorePlayer(data.player);
             RestoreInventory(data.inventory);
+            RestorePlacedObjects(data.placedObjects);
             RestoreWorldItems(data.worldItems);
 
             if (hotbarController != null)
@@ -714,6 +777,121 @@ namespace ShadowSupply.SaveSystem
                         ? itemData.angularVelocity.ToVector3()
                         : Vector3.zero
                 );
+            }
+        }
+
+        private void RestorePlacedObjects(
+            List<PlacedObjectSaveData> data
+        )
+        {
+            PlacedObject[] currentPlacedObjects =
+                FindObjectsByType<PlacedObject>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            foreach (
+                PlacedObject placedObject
+                in currentPlacedObjects
+            )
+            {
+                if (placedObject == null)
+                {
+                    continue;
+                }
+
+                placedObject.gameObject.SetActive(false);
+                Destroy(placedObject.gameObject);
+            }
+
+            if (data == null || data.Count == 0)
+            {
+                return;
+            }
+
+            if (placeableDatabase == null)
+            {
+                Debug.LogWarning(
+                    "[SaveManager] Placed objects could not be restored " +
+                    "because no PlaceableDatabase is assigned.",
+                    this
+                );
+                return;
+            }
+
+            foreach (
+                PlacedObjectSaveData objectData
+                in data
+            )
+            {
+                if (
+                    objectData == null ||
+                    string.IsNullOrWhiteSpace(
+                        objectData.placeableId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                if (
+                    !placeableDatabase.TryGetDefinition(
+                        objectData.placeableId,
+                        out PlaceableDefinition definition
+                    )
+                )
+                {
+                    Debug.LogWarning(
+                        $"[SaveManager] Missing placeable ID " +
+                        $"'{objectData.placeableId}'.",
+                        this
+                    );
+                    continue;
+                }
+
+                PlacedObject.Spawn(
+                    definition,
+                    objectData.position != null
+                        ? objectData.position.ToVector3()
+                        : Vector3.zero,
+                    objectData.rotation != null
+                        ? objectData.rotation.ToQuaternion()
+                        : Quaternion.identity,
+                    objectData.persistentId
+                );
+            }
+        }
+
+        private static void MigrateSaveData(
+            SaveGameData data
+        )
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            data.metadata ??=
+                new SaveSlotMetadata();
+
+            data.player ??=
+                new PlayerSaveData();
+
+            data.inventory ??=
+                new InventorySaveData();
+
+            data.inventory.slots ??=
+                new List<InventorySlotSaveData>();
+
+            data.worldItems ??=
+                new List<WorldItemSaveData>();
+
+            data.placedObjects ??=
+                new List<PlacedObjectSaveData>();
+
+            if (data.saveVersion < 2)
+            {
+                data.saveVersion = 2;
             }
         }
 

@@ -1125,6 +1125,7 @@ GameObject:
   - component: {fileID: 1139476486}
   - component: {fileID: 1139476485}
   - component: {fileID: 1139476484}
+  - component: {fileID: 1139476487}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1266,6 +1267,31 @@ MonoBehaviour:
   slotCount: 24
   hotbarSize: 8
   slots: []
+--- !u!114 &1139476487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139476479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d3e0252eedbe3c41a52ce83fd9dfb4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placementCamera: {fileID: 584131927}
+  database: {fileID: 11400000, guid: dfbf72523bdfec94ea73f59afb080060, type: 2}
+  hotbarController: {fileID: 0}
+  playerInteractor: {fileID: 0}
+  placementDistance: 8
+  placementMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  surfaceOffset: 0.01
+  collisionPadding: 0.035
+  snapToGrid: 1
+  validPreviewColor: {r: 0.18, g: 0.9, b: 0.42, a: 1}
+  invalidPreviewColor: {r: 0.95, g: 0.18, b: 0.12, a: 1}
 --- !u!1 &1141647913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1655,6 +1681,7 @@ GameObject:
   - component: {fileID: 1420558011}
   - component: {fileID: 1420558010}
   - component: {fileID: 1420558012}
+  - component: {fileID: 1420558013}
   m_Layer: 0
   m_Name: RuntimeServices
   m_TagString: Untagged
@@ -1750,6 +1777,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 11400000, guid: fe0a045d0147e6240a0a49daefe23c3f, type: 2}
+  placeableDatabase: {fileID: 11400000, guid: dfbf72523bdfec94ea73f59afb080060, type: 2}
   playerTransform: {fileID: 1139476483}
   playerInventory: {fileID: 1139476486}
   hotbarController: {fileID: 1139476484}
@@ -1775,6 +1803,19 @@ MonoBehaviour:
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
+--- !u!114 &1420558013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420558005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 618cc02b96420f14b906c08cf8417cd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placementController: {fileID: 1139476487}
 --- !u!1 &1423423598
 GameObject:
   m_ObjectHideFlags: 0

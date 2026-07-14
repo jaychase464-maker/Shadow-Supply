@@ -4,10 +4,10 @@ Update this file after each meaningful development session.
 
 ## Current version
 
-- Current clean rewrite: `v0.3.1-inventory-ui`
+- Current clean rewrite: `v0.4.0-placement-foundation`
 - Repository: `jaychase464-maker/Shadow-Supply`
 - Source-of-truth branch: `main`
-- Save schema version: `1`
+- Save schema version: `2`
 - Legacy v0.10.x work: historical design reference only
 - Experimental v0.11.x island rebuild: not the active project
 
@@ -27,90 +27,89 @@ Update this file after each meaningful development session.
 
 ### Milestone 1 — Playable Foundation
 
-- Verified working locally
 - First-person movement
-- Sprint
-- Jump
-- Crouch
+- Sprint, jump, and crouch
 - Cursor locking
 - Interaction framework
 - Development playground
 
 ### Milestone 2 — Items and Inventory
 
-- Verified working locally
 - Stable item definitions
-- Item categories, quality, and condition
 - Stackable inventory
 - Eight-slot hotbar
 - World pickups
 - Held-item display
-- Dropping items
-- Dropped-item physics hotfix committed
-
-## Current milestone
+- Dropping and physical item behavior
 
 ### Milestone 3 — Save and Load Foundation
 
-- Versioned save files
+- Versioned JSON save files
 - Three save slots
 - Player transform persistence
-- Inventory persistence by item ID
+- Inventory persistence by stable item ID
 - Hotbar persistence
 - World-pickup persistence
-- Dropped-item physics-state persistence
+- Dropped-item physics persistence
 - Save-slot metadata
-- Local acceptance testing pending
 
-## Current UI pass
+### Inventory UI production pass
 
-### v0.3.1 — Inventory UI Redesign
-
-- UI Toolkit runtime inventory
-- Industrial UXML and USS presentation
+- Industrial full-screen inventory
 - Twenty-four inventory slots
-- Eight-slot in-menu hotbar
 - Compact gameplay hotbar
-- Item detail card
-- Equipment display
-- Use, Drop, Split, and Inspect actions
-- Item icon resource support
-- Save schema unchanged
+- Item details and inspection
+- Slot mouse interaction
+- Use, Drop, Split, and Inspect controls
+
+## Current milestone
+
+### Milestone 4 — Persistent Furniture Placement
+
+- Stable placeable definitions
+- Placeable database
+- Floor placement
+- Grid snapping
+- Rotation controls
+- Green and red placement previews
+- Collision validation
+- Persistent placed-object IDs
+- Placed-object removal
+- Save schema version `2`
+- Backward-compatible schema `1` migration
+- Workbench, shelf, and cabinet development prefabs
 
 ## Current compilation state
 
-- Milestone 1 and Milestone 2 reported working
-- Milestone 3 package revision 2 resolved the reported `CS0104`
-- Inventory UI redesign awaiting local compilation and playtesting
+- Milestone 4 package awaiting local Unity compilation and acceptance testing
 
 ## Current known risks
 
-- Cash, dirty cash, and heat are temporary presentation values.
-- Weight currently uses item quantity rather than true item mass.
-- Save schema migrations have not yet been needed.
-- Runtime fallback meshes remain placeholders.
-- Production item prefabs will need correctly sized colliders.
+- Placement currently supports floor objects only.
+- Placeable development prefabs are primitive placeholders.
+- Placement currently uses a development HUD.
+- Furniture does not yet consume an inventory item.
+- Wall placement and surface placement are future milestones.
+- Production prefabs will need carefully authored placement bounds.
 - The repository only reflects committed and pushed local changes.
 
 ## Next planned work
 
-1. Validate Milestone 3 save and load.
-2. Validate the redesigned inventory interface.
-3. Commit and push the combined update.
-4. Begin persistent furniture placement.
-5. Integrate placed objects into save schema version `1` without changing existing fields.
-6. Build floor placement before wall placement and electrical objects.
+1. Validate placement preview, rotation, collision, and removal.
+2. Verify placed furniture survives save and load.
+3. Commit and push Milestone 4.
+4. Add placeable inventory items and purchasing.
+5. Build wall placement for outlets, lights, posters, and security devices.
+6. Begin the physical electrical system after placement persistence is stable.
 
 ## Session log
 
 ### 2026-07-14
 
 - Changes:
-  - Added production-style inventory UI.
-  - Added compact gameplay hotbar.
-  - Added item detail and inspection panels.
-  - Added stack splitting and inventory-to-hotbar swapping.
-  - Preserved save schema version `1`.
+  - Added persistent furniture placement foundation.
+  - Advanced save schema from version `1` to version `2`.
+  - Added backward-compatible migration for schema version `1`.
+  - Added three development placeables.
 - Tests performed:
-  - Local Unity compilation pending.
-  - Inventory UI acceptance testing pending.
+  - Local Unity compilation and acceptance testing pending.
