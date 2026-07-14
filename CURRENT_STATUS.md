@@ -1,56 +1,61 @@
 # Shadow Supply — Current Status
 
-## Current version
+## Current test version
 
-- Current clean rewrite: `v0.6.2-rigged-player-integration`
-- Save schema: `4`
-- Unity: `6000.0.58f2`
+`v0.7.0-modular-starter-garage`
 
-## Completed milestones
+## Completed before this milestone
 
-- Milestone 1 — Playable Foundation
-- Milestone 2 — Items and Inventory
-- Milestone 3 — Save and Load Foundation
-- Inventory UI production pass
-- Milestone 4 — Persistent Furniture Placement
-- Milestone 5 — Furniture Ownership and Acquisition
-- Milestone 6A — Modular Character Asset Foundation
+- Playable first-person foundation
+- Inventory and hotbar
+- Save/load foundation
+- Persistent furniture placement
+- Furniture ownership, shop, and physical delivery
+- Rigged modular player-character foundation
 
 ## Current milestone
 
-### Milestone 6B — Rigged Player Integration
+### Milestone 7A — Modular Starter Garage
 
 Included:
 
-- Confirmed Mixamo humanoid skeleton
-- Unity Humanoid Avatar setup
-- Rigged gameplay prefab
-- Full first-person body
-- Local head and face hiding
-- Complete shadow-only body
-- Procedural locomotion placeholder
-- Bone-bound equipment sockets
-- Backpack-ready attachment foundation
-- Appearance save-data schema
+- Modular brick garage shell
+- Concrete interior slab
+- Asphalt exterior lot
+- Temporary roof
+- Temporary overhead garage door
+- Entry door
+- Basic door interactions
+- Starter furniture and equipment
+- Interior lights and switch
+- Electrical/security dressing
+- Delivery pad
+- Exterior utility and clutter dressing
 
-## Next test gate
+## Progression rule
 
-The user must verify in Unity:
+- Starter garage: basic furniture and equipment included
+- Purchased hideouts: empty and fully player-furnished
 
-1. Humanoid validation
-2. Character orientation
-3. Character height and placement
-4. Looking-down body visibility
-5. Camera clipping
-6. Walk/sprint/crouch/jump deformation
-7. Complete character shadow
-8. Save/load migration
+## Test gate
 
-## Next development work after validation
+Milestone 7A must pass:
 
-- Replace procedural motion with production animation clips
-- Add first clothing item
-- Add backpack equipment test
-- Add clothing/body-region hiding
-- Add character customization UI
-- Continue to the starter garage vertical slice
+1. Layout and scale
+2. Wall, floor, door, and prop collision
+3. Door interactions
+4. Lighting
+5. Default furniture placement
+6. Delivery and supplier positioning
+7. Existing-system regression
+
+## Work after confirmation
+
+- Garage visual corrections and hotfixes
+- Door-state persistence
+- Property-state save data
+- Physical electrical grid
+- Breaker capacity and overload
+- Outlet/socket system
+- Plugging machines into power
+- Final roof and overhead-door asset swaps

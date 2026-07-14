@@ -1,12 +1,20 @@
 {
-  "name": "ShadowSupply_v0.6.5_RightAnkleSpinHotfix",
-  "version": "v0.6.5-right-ankle-spin-hotfix",
+  "name": "ShadowSupply_v0.7.7_SideDoorKeypadUtilityHotfix",
+  "version": "v0.7.7-side-door-keypad-utility-hotfix",
   "unity_version": "6000.0.58f2",
   "extract_to": "Unity project root",
-  "requires_setup_rerun": false,
+  "requires_rerun": "Shadow Supply/Setup/Apply Milestone 7A Modular Starter Garage",
+  "confirmed": false,
+  "discord_post_withheld": true,
+  "fixes": [
+    "flip imported electricity meter",
+    "replace broken imported breaker with deterministic panel",
+    "widen side-door masonry opening",
+    "install interior and exterior keypads"
+  ],
   "files": [
-    "Assets/_Project/Scripts/Runtime/Character/HumanoidFootAlignment.cs",
-    "DISCORD_RIGHT_ANKLE_SPIN_HOTFIX_v0.6.5.md",
-    "Documentation/RIGHT_ANKLE_SPIN_HOTFIX_v0.6.5.md"
+    "Assets/_Project/Scripts/Editor/Milestone7StarterGarageSetup.cs",
+    "DISCORD_DRAFT_DO_NOT_POST_UNTIL_CONFIRMED.md",
+    "Documentation/SIDE_DOOR_KEYPAD_UTILITY_HOTFIX_v0.7.7.md"
   ]
 }

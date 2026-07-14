@@ -1,43 +1,47 @@
 # Changelog
 
-## v0.6.2 — Rigged Player Integration
+## v0.7.0 — Modular Starter Garage Test Build
 
 ### Added
 
-- Mixamo-rigged player FBX
-- Unity Humanoid importer automation
-- Valid Avatar enforcement
-- Rigged player prefab generator
-- Full-body first-person character
-- Local head-bone hiding
-- Local face-accessory renderer hiding
-- Complete shadows-only body
-- Procedural locomotion placeholder
-- Bone-bound equipment sockets
-- Backpack attachment foundation
-- Runtime character coordinator
-- Character appearance save data
-- Save schema 4 migration
-- Rigged-player validator
+- 12 m × 8 m modular starter-garage property
+- Four-meter modular brick wall grid
+- Cracked-concrete interior floor
+- Asphalt exterior lot
+- Delivery pad
+- Temporary modular roof
+- Temporary sectional overhead door
+- Functional regular entry door
+- Basic open/close door interactions
+- Installed fluorescent lighting
+- Functional garage light switch
+- Rusty structural supports
+- Exposed ventilation
+- Breaker-panel housing
+- Electricity meter
+- Wall outlets
+- CCTV and keypad
+- Included workbench
+- Included storage rack
+- Included office desk
+- Included utility cabinet
+- Included monitor
+- Exterior street light
+- Exterior power box
+- Bins, pallets, boxes, and curbs
+- Included-property asset marker
 
 ### Updated
 
-- First-person controller now exposes read-only locomotion state.
-- SaveManager now captures and restores character appearance.
-- Existing schema-3 saves migrate to schema 4.
-
-### Preserved
-
-- First-person movement
-- Inventory
-- Furniture placement
-- Furniture ownership
-- Physical deliveries
-- Existing world persistence
+- Player starts outside the new garage
+- Furniture delivery point moved to the exterior pad
+- Supplier terminal moved into the office area
+- Old test-room `Environment` root removed
 
 ### Deferred
 
-- Production animation clips
-- Clothing catalog
-- Backpack visual asset
-- Character customization interface
+- Property save state
+- Door-state persistence
+- Full electrical-grid gameplay
+- Final roof model
+- Final overhead-door model
