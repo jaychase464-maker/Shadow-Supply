@@ -1,0 +1,51 @@
+SHADOW SUPPLY REPOSITORY IMPORT
+
+1. Make a backup of the current Unity project.
+
+2. Delete or exclude generated folders before the first repository upload:
+   Library
+   Temp
+   Logs
+   obj
+   Build
+   Builds
+   UserSettings
+   .vs
+
+3. Extract this package into the ROOT of the Unity project.
+   The root is the folder containing:
+   Assets
+   Packages
+   ProjectSettings
+
+4. Install:
+   - Git for Windows
+   - Git LFS
+
+5. Create an empty private repository on GitHub.
+   Do not initialize it with a README, .gitignore, or license.
+
+6. Open PowerShell in the Unity project root and run:
+
+   .\Tools\Initialize_ShadowSupply_Repository.ps1 -RemoteUrl "YOUR_GITHUB_REPOSITORY_URL"
+
+7. Review:
+   PROJECT_CONTEXT.md
+   CURRENT_STATUS.md
+   SYSTEM_MAP.md
+   BUGS.md
+
+8. Add the Unity project:
+
+   git add Assets Packages ProjectSettings
+   git status
+   git commit -m "chore: import Shadow Supply Unity project"
+   git push -u origin main
+
+9. In ChatGPT, connect the GitHub app and authorize only the Shadow Supply repository.
+
+10. Start future chats with:
+
+   Continue Shadow Supply using the connected repository as the source of truth.
+   Read CHATGPT_START_HERE.md, PROJECT_CONTEXT.md, CURRENT_STATUS.md,
+   SYSTEM_MAP.md, and BUGS.md before making changes.

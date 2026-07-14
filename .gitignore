@@ -1,0 +1,69 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# Visual Studio / IDE
+.vs/
+.idea/
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity generated metadata for IDE files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Crash reports
+sysinfo.txt
+
+# Builds and packages
+*.apk
+*.aab
+*.app
+*.unitypackage
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary archives
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Addressables generated content
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+/[Ss]erver[Dd]ata/
+
+# Plastic SCM
+.plastic/
+
+# Rider
+.idea/
+*.DotSettings.user
+
+# Gradle
+.gradle/
+
+# Do not ignore Unity .meta files
+!*.meta

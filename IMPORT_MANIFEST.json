@@ -1,0 +1,23 @@
+{
+  "package_name": "ShadowSupply_RepositoryImport",
+  "purpose": "Repository bootstrap package for an existing Shadow Supply Unity project",
+  "extract_to": "Unity project root containing Assets, Packages, and ProjectSettings",
+  "files": [
+    ".gitattributes",
+    ".github/copilot-instructions.md",
+    ".gitignore",
+    "BUGS.md",
+    "CHANGELOG.md",
+    "CHATGPT_START_HERE.md",
+    "CURRENT_STATUS.md",
+    "Documentation/ASSET_IMPORT_POLICY.md",
+    "Documentation/REPOSITORY_WORKFLOW.md",
+    "IMPORT_INSTRUCTIONS.txt",
+    "PROJECT_CONTEXT.md",
+    "README.md",
+    "SYSTEM_MAP.md",
+    "Tools/Initialize_ShadowSupply_Repository.bat",
+    "Tools/Initialize_ShadowSupply_Repository.ps1",
+    "Tools/Verify_Repository.ps1"
+  ]
+}
