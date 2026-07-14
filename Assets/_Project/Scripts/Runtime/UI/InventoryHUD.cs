@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ShadowSupply.Economy;
 using ShadowSupply.Inventory;
 using ShadowSupply.Player;
 using UnityEngine;
@@ -32,14 +33,9 @@ namespace ShadowSupply.UI
         [SerializeField] private PlayerInventory inventory;
         [SerializeField] private HotbarController hotbar;
         [SerializeField] private FirstPersonController firstPersonController;
+        [SerializeField] private PlayerWallet playerWallet;
 
         [Header("Header Values")]
-        [Tooltip("Temporary value until the full economy system is implemented.")]
-        [SerializeField, Min(0)] private int cash;
-
-        [Tooltip("Temporary value until the full dirty-cash system is implemented.")]
-        [SerializeField, Min(0)] private int dirtyCash;
-
         [Tooltip("Temporary value until the full heat system is implemented.")]
         [SerializeField, Range(0f, 100f)] private float heatPercent;
 
@@ -53,6 +49,7 @@ namespace ShadowSupply.UI
 
         private PlayerInventory subscribedInventory;
         private HotbarController subscribedHotbar;
+        private PlayerWallet subscribedWallet;
 
         private VisualElement root;
         private VisualElement inventoryUiRoot;
@@ -2197,7 +2194,17 @@ namespace ShadowSupply.UI
             inventoryCountLabel.text =
                 $"{occupiedSlots} / {inventory.SlotCount}";
 
-            cashLabel.text = $"${cash:N0}";
+            int cleanCash =
+                playerWallet != null
+                    ? playerWallet.CleanCash
+                    : 0;
+
+            int dirtyCash =
+                playerWallet != null
+                    ? playerWallet.DirtyCash
+                    : 0;
+
+            cashLabel.text = $"${cleanCash:N0}";
             dirtyCashLabel.text = $"${dirtyCash:N0}";
             heatLabel.text = $"{heatPercent:0}%";
 
@@ -2917,6 +2924,11 @@ namespace ShadowSupply.UI
             RefreshAll();
         }
 
+        private void HandleWalletChanged()
+        {
+            RefreshStats();
+        }
+
         private void HandleInventoryChanged()
         {
             if (selectedInventoryIndex >= inventory.SlotCount)
@@ -2942,7 +2954,8 @@ namespace ShadowSupply.UI
             if (
                 inventory != null &&
                 hotbar != null &&
-                firstPersonController != null
+                firstPersonController != null &&
+                playerWallet != null
             )
             {
                 return;
@@ -2964,6 +2977,9 @@ namespace ShadowSupply.UI
 
             firstPersonController ??=
                 player.GetComponent<FirstPersonController>();
+
+            playerWallet ??=
+                FindFirstObjectByType<PlayerWallet>();
         }
 
         private void BindDataSources()
@@ -3001,6 +3017,23 @@ namespace ShadowSupply.UI
                         HandleHotbarSelectionChanged;
                 }
             }
+
+            if (subscribedWallet != playerWallet)
+            {
+                if (subscribedWallet != null)
+                {
+                    subscribedWallet.Changed -=
+                        HandleWalletChanged;
+                }
+
+                subscribedWallet = playerWallet;
+
+                if (subscribedWallet != null)
+                {
+                    subscribedWallet.Changed +=
+                        HandleWalletChanged;
+                }
+            }
         }
 
         private void UnbindDataSources()
@@ -3017,8 +3050,15 @@ namespace ShadowSupply.UI
                     HandleHotbarSelectionChanged;
             }
 
+            if (subscribedWallet != null)
+            {
+                subscribedWallet.Changed -=
+                    HandleWalletChanged;
+            }
+
             subscribedInventory = null;
             subscribedHotbar = null;
+            subscribedWallet = null;
         }
 
         private static void SetClass(

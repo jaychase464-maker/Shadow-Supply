@@ -118,6 +118,108 @@ namespace ShadowSupply.Inventory
             return result;
         }
 
+
+        public int CountItem(ItemDefinition item)
+        {
+            if (item == null)
+            {
+                return 0;
+            }
+
+            InitializeSlots();
+            int total = 0;
+
+            foreach (InventorySlot slot in slots)
+            {
+                if (
+                    slot != null &&
+                    !slot.IsEmpty &&
+                    slot.Stack.Item == item
+                )
+                {
+                    total += slot.Stack.Quantity;
+                }
+            }
+
+            return total;
+        }
+
+        public bool TryRemoveItem(
+            ItemDefinition item,
+            int quantity,
+            out ItemStack removedStack
+        )
+        {
+            removedStack = null;
+
+            if (
+                item == null ||
+                quantity <= 0 ||
+                CountItem(item) < quantity
+            )
+            {
+                return false;
+            }
+
+            InitializeSlots();
+
+            ItemQuality quality = ItemQuality.Standard;
+            float condition = 1f;
+            int remaining = quantity;
+            bool capturedMetadata = false;
+
+            for (
+                int index = slots.Count - 1;
+                index >= 0 && remaining > 0;
+                index--
+            )
+            {
+                InventorySlot slot = slots[index];
+
+                if (
+                    slot == null ||
+                    slot.IsEmpty ||
+                    slot.Stack.Item != item
+                )
+                {
+                    continue;
+                }
+
+                if (!capturedMetadata)
+                {
+                    quality = slot.Stack.Quality;
+                    condition = slot.Stack.Condition;
+                    capturedMetadata = true;
+                }
+
+                int removed =
+                    slot.Stack.Remove(remaining);
+
+                remaining -= removed;
+            }
+
+            if (remaining > 0)
+            {
+                Debug.LogError(
+                    $"[PlayerInventory] Failed to remove the requested " +
+                    $"quantity of '{item.DisplayName}'.",
+                    this
+                );
+                return false;
+            }
+
+            removedStack =
+                new ItemStack(
+                    item,
+                    quantity,
+                    quality,
+                    condition
+                );
+
+            Changed?.Invoke();
+            return true;
+        }
+
         public bool HasSpaceFor(ItemDefinition item, int quantity)
         {
             if (item == null || quantity <= 0)

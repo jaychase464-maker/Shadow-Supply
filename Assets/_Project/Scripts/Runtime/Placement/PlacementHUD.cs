@@ -11,6 +11,7 @@ namespace ShadowSupply.Placement
         private GUIStyle statusStyle;
         private GUIStyle bodyStyle;
         private GUIStyle keyStyle;
+        private GUIStyle countStyle;
 
         public void Configure(
             PlacementController controller
@@ -37,8 +38,8 @@ namespace ShadowSupply.Placement
 
             EnsureStyles();
 
-            const float width = 420f;
-            const float height = 172f;
+            const float width = 470f;
+            const float height = 196f;
 
             Rect panel = new Rect(
                 22f,
@@ -61,15 +62,31 @@ namespace ShadowSupply.Placement
                     ? definition.DisplayName.ToUpperInvariant()
                     : "PLACEMENT MODE";
 
+            int owned =
+                placementController.GetOwnedCount(definition);
+
             GUI.Label(
                 new Rect(
                     panel.x + 18f,
                     panel.y + 12f,
-                    panel.width - 36f,
+                    panel.width - 150f,
                     30f
                 ),
                 title,
                 titleStyle
+            );
+
+            GUI.Label(
+                new Rect(
+                    panel.xMax - 128f,
+                    panel.y + 12f,
+                    108f,
+                    30f
+                ),
+                owned == int.MaxValue
+                    ? "OWNED ∞"
+                    : $"OWNED {owned}",
+                countStyle
             );
 
             Color previous = GUI.color;
@@ -82,9 +99,9 @@ namespace ShadowSupply.Placement
             GUI.Label(
                 new Rect(
                     panel.x + 18f,
-                    panel.y + 46f,
+                    panel.y + 48f,
                     panel.width - 36f,
-                    24f
+                    25f
                 ),
                 placementController.StatusMessage,
                 statusStyle
@@ -95,12 +112,13 @@ namespace ShadowSupply.Placement
             GUI.Label(
                 new Rect(
                     panel.x + 18f,
-                    panel.y + 76f,
+                    panel.y + 78f,
                     panel.width - 36f,
-                    45f
+                    68f
                 ),
-                "1–3 Select  •  R / Mouse Wheel Rotate  •  Left Click Place\n" +
-                "Delete Remove Target  •  Right Click / B Exit",
+                "1–6 Select  •  R / Mouse Wheel Rotate\n" +
+                "Left Click Place  •  Delete Pack Target\n" +
+                "Right Click / B Exit",
                 bodyStyle
             );
 
@@ -122,7 +140,7 @@ namespace ShadowSupply.Placement
                     panel.width - 78f,
                     28f
                 ),
-                "BUILD MODE ACTIVE",
+                "BUILD MODE ACTIVE — PLACEMENT CONSUMES OWNED ITEMS",
                 bodyStyle
             );
         }
@@ -154,6 +172,19 @@ namespace ShadowSupply.Placement
                     {
                         textColor =
                             new Color(0.95f, 0.55f, 0.1f)
+                    }
+                };
+
+            countStyle =
+                new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 14,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleRight,
+                    normal =
+                    {
+                        textColor =
+                            new Color(0.31f, 0.76f, 0.65f)
                     }
                 };
 

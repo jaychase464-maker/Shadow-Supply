@@ -31,8 +31,13 @@ namespace ShadowSupply.Placement
 
             if (definition != null)
             {
+                string shortId =
+                    persistentId.Length > 8
+                        ? persistentId.Substring(0, 8)
+                        : persistentId;
+
                 gameObject.name =
-                    $"Placed_{definition.DisplayName}_{persistentId[..8]}";
+                    $"Placed_{definition.DisplayName}_{shortId}";
             }
         }
 

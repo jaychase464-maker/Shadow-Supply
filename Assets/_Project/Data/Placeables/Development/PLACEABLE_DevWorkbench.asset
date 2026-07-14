@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placeableId: d16479db21dc418f99598a38a1ee5318
   displayName: Workbench
-  description: A sturdy starter workbench for future crafting and assembly.
-  prefab: {fileID: 1134669316962814494, guid: 86705edc561651d479796df67593c073, type: 3}
+  description: A sturdy assembly bench for future crafting and production.
+  inventoryItem: {fileID: 11400000, guid: 8512c1b74583a414e8b211bdda0eaadd, type: 2}
+  purchasePrice: 250
+  prefab: {fileID: 222046600145993268, guid: bf99e575d7f3173479c683d456381db0, type: 3}
   surfaceType: 0
-  boundsCenter: {x: 0, y: 0.96, z: 0}
-  boundsSize: {x: 2.2, y: 1.92, z: 0.9}
+  boundsCenter: {x: 0, y: 0.42929217, z: 0}
+  boundsSize: {x: 1.1447778, y: 0.85858434, z: 2.3399997}
   gridSize: 0.25
   rotationStep: 15
   maximumSlope: 20

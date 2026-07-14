@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bae1f4bf4affe814da455c745759da15, type: 3}
+  m_Name: PLACEABLE_OfficeDesk
+  m_EditorClassIdentifier: 
+  placeableId: 10f9cc37a9744a9ab67dd89dbf442d3f
+  displayName: Office Desk
+  description: A professional desk for computers and paperwork.
+  inventoryItem: {fileID: 11400000, guid: 1b9bd7c080231864d98c4033168b2207, type: 2}
+  purchasePrice: 185
+  prefab: {fileID: 5109425026838517092, guid: 91e4907f1081f584b98f63f528e98f01, type: 3}
+  surfaceType: 0
+  boundsCenter: {x: 0, y: 0.5181304, z: 0}
+  boundsSize: {x: 1.1281046, y: 1.0362608, z: 2.3}
+  gridSize: 0.25
+  rotationStep: 15
+  maximumSlope: 20

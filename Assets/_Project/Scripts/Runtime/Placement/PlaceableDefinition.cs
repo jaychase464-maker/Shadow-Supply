@@ -1,11 +1,14 @@
 using System;
+using ShadowSupply.Inventory;
 using UnityEngine;
 
 namespace ShadowSupply.Placement
 {
     public enum PlacementSurfaceType
     {
-        Floor
+        Floor,
+        Wall,
+        Ceiling
     }
 
     [CreateAssetMenu(
@@ -18,6 +21,10 @@ namespace ShadowSupply.Placement
         [SerializeField, HideInInspector] private string placeableId;
         [SerializeField] private string displayName = "New Placeable";
         [SerializeField, TextArea(2, 5)] private string description;
+
+        [Header("Ownership")]
+        [SerializeField] private ItemDefinition inventoryItem;
+        [SerializeField, Min(0)] private int purchasePrice;
 
         [Header("Prefab")]
         [SerializeField] private GameObject prefab;
@@ -36,6 +43,8 @@ namespace ShadowSupply.Placement
         public string PlaceableId => placeableId;
         public string DisplayName => displayName;
         public string Description => description;
+        public ItemDefinition InventoryItem => inventoryItem;
+        public int PurchasePrice => purchasePrice;
         public GameObject Prefab => prefab;
         public PlacementSurfaceType SurfaceType => surfaceType;
         public Vector3 BoundsCenter => boundsCenter;
@@ -43,6 +52,7 @@ namespace ShadowSupply.Placement
         public float GridSize => gridSize;
         public float RotationStep => rotationStep;
         public float MaximumSlope => maximumSlope;
+        public bool RequiresOwnership => inventoryItem != null;
 
         public void EnsurePersistentId()
         {
@@ -61,6 +71,7 @@ namespace ShadowSupply.Placement
                 displayName = name;
             }
 
+            purchasePrice = Mathf.Max(0, purchasePrice);
             boundsSize.x = Mathf.Max(0.05f, boundsSize.x);
             boundsSize.y = Mathf.Max(0.05f, boundsSize.y);
             boundsSize.z = Mathf.Max(0.05f, boundsSize.z);

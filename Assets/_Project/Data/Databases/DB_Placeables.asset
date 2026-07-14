@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: DB_Placeables
   m_EditorClassIdentifier: 
   definitions:
-  - {fileID: 11400000, guid: a1b49917eaf9f5f4b8e75e18d7cb0b61, type: 2}
-  - {fileID: 11400000, guid: d4819c106ce69d740a0c4b6287e378b8, type: 2}
   - {fileID: 11400000, guid: 101d336ece813bb419fc349696111331, type: 2}
+  - {fileID: 11400000, guid: a1b49917eaf9f5f4b8e75e18d7cb0b61, type: 2}
+  - {fileID: 11400000, guid: 39a896f131c09a043b6c5dae1e121578, type: 2}
+  - {fileID: 11400000, guid: d4819c106ce69d740a0c4b6287e378b8, type: 2}
+  - {fileID: 11400000, guid: 9c367cf3086b6e54f8f67b8a5bba6fb2, type: 2}
+  - {fileID: 11400000, guid: 5db0d25c0ea3f14478caa9863206afa0, type: 2}

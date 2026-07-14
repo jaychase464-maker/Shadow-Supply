@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using ShadowSupply.Delivery;
+using ShadowSupply.Economy;
 using ShadowSupply.Inventory;
 using ShadowSupply.Player;
 using ShadowSupply.Placement;
@@ -13,15 +15,19 @@ namespace ShadowSupply.SaveSystem
     [DefaultExecutionOrder(-500)]
     public sealed class SaveManager : MonoBehaviour
     {
-        public const int CurrentSaveVersion = 2;
+        public const int CurrentSaveVersion = 3;
         public const string CurrentGameVersion =
-            "v0.4.0-placement-foundation";
+            "v0.5.0-furniture-ownership";
 
         public static SaveManager Instance { get; private set; }
 
         [Header("Databases")]
         [SerializeField] private ItemDatabase itemDatabase;
         [SerializeField] private PlaceableDatabase placeableDatabase;
+
+        [Header("Economy and Delivery")]
+        [SerializeField] private PlayerWallet playerWallet;
+        [SerializeField] private FurnitureDeliverySystem deliverySystem;
 
         [Header("Scene References")]
         [SerializeField] private Transform playerTransform;
@@ -100,6 +106,15 @@ namespace ShadowSupply.SaveSystem
         )
         {
             placeableDatabase = database;
+        }
+
+        public void ConfigureEconomyAndDelivery(
+            PlayerWallet wallet,
+            FurnitureDeliverySystem system
+        )
+        {
+            playerWallet = wallet;
+            deliverySystem = system;
         }
 
         public void SetActiveSlot(int slot)
@@ -384,7 +399,11 @@ namespace ShadowSupply.SaveSystem
                 worldItems =
                     CaptureWorldItems(),
                 placedObjects =
-                    CapturePlacedObjects()
+                    CapturePlacedObjects(),
+                wallet =
+                    CaptureWallet(),
+                furnitureDeliveries =
+                    CaptureFurnitureDeliveries()
             };
 
             return data;
@@ -553,6 +572,69 @@ namespace ShadowSupply.SaveSystem
             return data;
         }
 
+        private WalletSaveData CaptureWallet()
+        {
+            return new WalletSaveData
+            {
+                cleanCash =
+                    playerWallet != null
+                        ? playerWallet.CleanCash
+                        : 0,
+                dirtyCash =
+                    playerWallet != null
+                        ? playerWallet.DirtyCash
+                        : 0
+            };
+        }
+
+        private List<FurnitureDeliverySaveData> CaptureFurnitureDeliveries()
+        {
+            List<FurnitureDeliverySaveData> data =
+                new List<FurnitureDeliverySaveData>();
+
+            FurnitureDeliveryCrate[] crates =
+                FindObjectsByType<FurnitureDeliveryCrate>(
+                    FindObjectsInactive.Exclude,
+                    FindObjectsSortMode.None
+                );
+
+            foreach (FurnitureDeliveryCrate crate in crates)
+            {
+                if (
+                    crate == null ||
+                    crate.Item == null ||
+                    crate.Quantity <= 0
+                )
+                {
+                    continue;
+                }
+
+                crate.EnsurePersistentId();
+
+                data.Add(
+                    new FurnitureDeliverySaveData
+                    {
+                        persistentId =
+                            crate.PersistentId,
+                        itemId =
+                            crate.Item.ItemId,
+                        quantity =
+                            crate.Quantity,
+                        position =
+                            new Vector3SaveData(
+                                crate.transform.position
+                            ),
+                        rotation =
+                            new QuaternionSaveData(
+                                crate.transform.rotation
+                            )
+                    }
+                );
+            }
+
+            return data;
+        }
+
         private void ApplySaveData(SaveGameData data)
         {
             ResolveSceneReferences();
@@ -571,6 +653,8 @@ namespace ShadowSupply.SaveSystem
             RestoreInventory(data.inventory);
             RestorePlacedObjects(data.placedObjects);
             RestoreWorldItems(data.worldItems);
+            RestoreWallet(data.wallet);
+            RestoreFurnitureDeliveries(data.furnitureDeliveries);
 
             if (hotbarController != null)
             {
@@ -889,9 +973,100 @@ namespace ShadowSupply.SaveSystem
             data.placedObjects ??=
                 new List<PlacedObjectSaveData>();
 
-            if (data.saveVersion < 2)
+            data.wallet ??=
+                new WalletSaveData();
+
+            data.furnitureDeliveries ??=
+                new List<FurnitureDeliverySaveData>();
+
+            if (data.saveVersion < 3)
             {
-                data.saveVersion = 2;
+                if (data.wallet.cleanCash <= 0)
+                {
+                    data.wallet.cleanCash = 1200;
+                }
+            }
+
+            data.saveVersion = 3;
+        }
+
+        private void RestoreWallet(
+            WalletSaveData data
+        )
+        {
+            if (playerWallet == null)
+            {
+                return;
+            }
+
+            playerWallet.Restore(
+                data != null
+                    ? data.cleanCash
+                    : 1200,
+                data != null
+                    ? data.dirtyCash
+                    : 0
+            );
+        }
+
+        private void RestoreFurnitureDeliveries(
+            List<FurnitureDeliverySaveData> data
+        )
+        {
+            if (deliverySystem == null)
+            {
+                return;
+            }
+
+            deliverySystem.ClearCurrentDeliveries();
+
+            if (data == null)
+            {
+                return;
+            }
+
+            foreach (
+                FurnitureDeliverySaveData deliveryData
+                in data
+            )
+            {
+                if (
+                    deliveryData == null ||
+                    deliveryData.quantity <= 0 ||
+                    string.IsNullOrWhiteSpace(
+                        deliveryData.itemId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                if (
+                    !itemDatabase.TryGetItem(
+                        deliveryData.itemId,
+                        out ItemDefinition definition
+                    )
+                )
+                {
+                    Debug.LogWarning(
+                        $"[SaveManager] Missing delivery item ID " +
+                        $"'{deliveryData.itemId}'.",
+                        this
+                    );
+                    continue;
+                }
+
+                deliverySystem.SpawnRestoredDelivery(
+                    deliveryData.persistentId,
+                    definition,
+                    deliveryData.quantity,
+                    deliveryData.position != null
+                        ? deliveryData.position.ToVector3()
+                        : Vector3.zero,
+                    deliveryData.rotation != null
+                        ? deliveryData.rotation.ToQuaternion()
+                        : Quaternion.identity
+                );
             }
         }
 
@@ -960,6 +1135,18 @@ namespace ShadowSupply.SaveSystem
             {
                 hotbarController =
                     playerInventory.GetComponent<HotbarController>();
+            }
+
+            if (playerWallet == null)
+            {
+                playerWallet =
+                    FindFirstObjectByType<PlayerWallet>();
+            }
+
+            if (deliverySystem == null)
+            {
+                deliverySystem =
+                    FindFirstObjectByType<FurnitureDeliverySystem>();
             }
 
             if (

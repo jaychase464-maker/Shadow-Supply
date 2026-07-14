@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placeableId: 76b9abdbeeef4b04b9d1d12dec319df0
   displayName: Utility Cabinet
-  description: A lockable cabinet foundation for tools and restricted supplies.
-  prefab: {fileID: 6515469104044121674, guid: 5a6ba2ffa78abe540a2c9ed15d1ac5c1, type: 3}
+  description: A lockable cabinet for tools and restricted supplies.
+  inventoryItem: {fileID: 11400000, guid: 76d75fec84ef7054c9ef1ff8f819c900, type: 2}
+  purchasePrice: 160
+  prefab: {fileID: 8936113021291324941, guid: 2bc02d1ddd75d50478d3da6a23a792ec, type: 3}
   surfaceType: 0
   boundsCenter: {x: 0, y: 0.75, z: 0}
   boundsSize: {x: 1.15, y: 1.5, z: 0.55}

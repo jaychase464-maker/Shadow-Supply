@@ -12,6 +12,7 @@ namespace ShadowSupply.Placement
         [Header("References")]
         [SerializeField] private Camera placementCamera;
         [SerializeField] private PlaceableDatabase database;
+        [SerializeField] private PlayerInventory inventory;
         [SerializeField] private HotbarController hotbarController;
         [SerializeField] private PlayerInteractor playerInteractor;
 
@@ -20,7 +21,7 @@ namespace ShadowSupply.Placement
         [SerializeField] private LayerMask placementMask = ~0;
 
         [Header("Validation")]
-        [SerializeField, Min(0f)] private float surfaceOffset = 0.01f;
+        [SerializeField, Min(0f)] private float surfaceOffset = 0.015f;
         [SerializeField, Range(0f, 0.2f)] private float collisionPadding = 0.035f;
         [SerializeField] private bool snapToGrid = true;
 
@@ -42,7 +43,7 @@ namespace ShadowSupply.Placement
         private MaterialPropertyBlock previewPropertyBlock;
 
         private int selectedDefinitionIndex;
-        private float previewYaw;
+        private float previewRotationOffset;
         private bool previewValid;
         private bool hasSurfaceHit;
         private bool hotbarWasEnabled;
@@ -73,6 +74,9 @@ namespace ShadowSupply.Placement
         {
             placementCamera ??=
                 GetComponentInChildren<Camera>(true);
+
+            inventory ??=
+                GetComponent<PlayerInventory>();
 
             hotbarController ??=
                 GetComponent<HotbarController>();
@@ -154,7 +158,7 @@ namespace ShadowSupply.Placement
 
             if (removeAction.WasPressedThisFrame())
             {
-                RemoveTargetedPlacedObject();
+                PackTargetedPlacedObject();
             }
 
             if (
@@ -171,8 +175,46 @@ namespace ShadowSupply.Placement
             PlaceableDatabase placeableDatabase
         )
         {
+            Configure(
+                cameraReference,
+                placeableDatabase,
+                inventory ?? GetComponent<PlayerInventory>()
+            );
+        }
+
+        public void Configure(
+            Camera cameraReference,
+            PlaceableDatabase placeableDatabase,
+            PlayerInventory playerInventory
+        )
+        {
             placementCamera = cameraReference;
             database = placeableDatabase;
+            inventory =
+                playerInventory ??
+                GetComponent<PlayerInventory>();
+        }
+
+        public int GetOwnedCount(
+            PlaceableDefinition definition
+        )
+        {
+            if (definition == null)
+            {
+                return 0;
+            }
+
+            if (!definition.RequiresOwnership)
+            {
+                return int.MaxValue;
+            }
+
+            return
+                inventory != null
+                    ? inventory.CountItem(
+                        definition.InventoryItem
+                    )
+                    : 0;
         }
 
         public void EnterBuildMode()
@@ -188,11 +230,12 @@ namespace ShadowSupply.Placement
 
             BuildModeActive = true;
             selectedDefinitionIndex =
-                Mathf.Clamp(
-                    selectedDefinitionIndex,
-                    0,
-                    database.Definitions.Count - 1
-                );
+                FindFirstOwnedDefinitionIndex();
+
+            if (selectedDefinitionIndex < 0)
+            {
+                selectedDefinitionIndex = 0;
+            }
 
             hotbarWasEnabled =
                 hotbarController != null &&
@@ -212,11 +255,18 @@ namespace ShadowSupply.Placement
                 playerInteractor.enabled = false;
             }
 
-            previewYaw = 0f;
+            previewRotationOffset = 0f;
             CreatePreview();
+
+            PlaceableDefinition definition =
+                CurrentDefinition;
+
             SetTransientMessage(
-                $"Selected {CurrentDefinition.DisplayName}.",
-                2f
+                definition != null
+                    ? $"Selected {definition.DisplayName}. " +
+                      $"Owned: {GetOwnedCount(definition)}"
+                    : "No placeable selected.",
+                2.5f
             );
 
             BuildModeChanged?.Invoke(true);
@@ -289,7 +339,7 @@ namespace ShadowSupply.Placement
 
             removeAction =
                 new InputAction(
-                    "Remove Placed Object",
+                    "Pack Placed Object",
                     InputActionType.Button,
                     "<Keyboard>/delete"
                 );
@@ -311,18 +361,12 @@ namespace ShadowSupply.Placement
 
             int requestedIndex = -1;
 
-            if (keyboard.digit1Key.wasPressedThisFrame)
-            {
-                requestedIndex = 0;
-            }
-            else if (keyboard.digit2Key.wasPressedThisFrame)
-            {
-                requestedIndex = 1;
-            }
-            else if (keyboard.digit3Key.wasPressedThisFrame)
-            {
-                requestedIndex = 2;
-            }
+            if (keyboard.digit1Key.wasPressedThisFrame) requestedIndex = 0;
+            else if (keyboard.digit2Key.wasPressedThisFrame) requestedIndex = 1;
+            else if (keyboard.digit3Key.wasPressedThisFrame) requestedIndex = 2;
+            else if (keyboard.digit4Key.wasPressedThisFrame) requestedIndex = 3;
+            else if (keyboard.digit5Key.wasPressedThisFrame) requestedIndex = 4;
+            else if (keyboard.digit6Key.wasPressedThisFrame) requestedIndex = 5;
 
             if (
                 requestedIndex < 0 ||
@@ -334,12 +378,18 @@ namespace ShadowSupply.Placement
             }
 
             selectedDefinitionIndex = requestedIndex;
-            previewYaw = 0f;
+            previewRotationOffset = 0f;
             CreatePreview();
 
+            PlaceableDefinition definition =
+                CurrentDefinition;
+
             SetTransientMessage(
-                $"Selected {CurrentDefinition.DisplayName}.",
-                2f
+                definition != null
+                    ? $"Selected {definition.DisplayName}. " +
+                      $"Owned: {GetOwnedCount(definition)}"
+                    : "No placeable selected.",
+                2.5f
             );
         }
 
@@ -388,9 +438,9 @@ namespace ShadowSupply.Placement
                 return;
             }
 
-            previewYaw =
+            previewRotationOffset =
                 Mathf.Repeat(
-                    previewYaw +
+                    previewRotationOffset +
                     definition.RotationStep * direction,
                     360f
                 );
@@ -408,12 +458,10 @@ namespace ShadowSupply.Placement
                 previewObject == null
             )
             {
-                previewValid = false;
-                hasSurfaceHit = false;
-                validationMessage =
-                    "Placement definition is incomplete.";
-                ApplyPreviewColor(false);
-                PreviewChanged?.Invoke();
+                SetInvalid(
+                    "Placement definition is incomplete.",
+                    false
+                );
                 return;
             }
 
@@ -432,12 +480,10 @@ namespace ShadowSupply.Placement
                 )
             )
             {
-                previewValid = false;
-                hasSurfaceHit = false;
-                validationMessage =
-                    "Aim at a floor within placement range.";
-                ApplyPreviewColor(false);
-                PreviewChanged?.Invoke();
+                SetInvalid(
+                    "Aim at a valid surface within placement range.",
+                    false
+                );
                 return;
             }
 
@@ -447,29 +493,30 @@ namespace ShadowSupply.Placement
                 hit.collider.GetComponentInParent<PlacedObject>() != null
             )
             {
-                previewValid = false;
-                validationMessage =
-                    "Furniture cannot be placed on other furniture.";
-                ApplyPreviewTransform(
+                SetInvalid(
+                    "Cannot place an object on another placed object.",
+                    true,
                     hit.point,
-                    Quaternion.Euler(0f, previewYaw, 0f)
+                    previewObject.transform.rotation
                 );
-                ApplyPreviewColor(false);
-                PreviewChanged?.Invoke();
                 return;
             }
 
-            float slope =
-                Vector3.Angle(
-                    hit.normal,
-                    Vector3.up
+            if (!IsSurfaceValid(definition, hit.normal))
+            {
+                SetInvalid(
+                    GetSurfaceFailureMessage(definition),
+                    true,
+                    hit.point,
+                    previewObject.transform.rotation
                 );
+                return;
+            }
 
             Quaternion rotation =
-                Quaternion.Euler(
-                    0f,
-                    previewYaw,
-                    0f
+                BuildPreviewRotation(
+                    definition,
+                    hit.normal
                 );
 
             Vector3 position =
@@ -478,10 +525,18 @@ namespace ShadowSupply.Placement
 
             if (snapToGrid)
             {
-                position = SnapPosition(
-                    position,
-                    definition.GridSize
-                );
+                position =
+                    definition.SurfaceType ==
+                    PlacementSurfaceType.Wall
+                        ? SnapWallPosition(
+                            position,
+                            hit.normal,
+                            definition.GridSize
+                        )
+                        : SnapFloorPosition(
+                            position,
+                            definition.GridSize
+                        );
             }
 
             ApplyPreviewTransform(
@@ -489,13 +544,21 @@ namespace ShadowSupply.Placement
                 rotation
             );
 
-            if (slope > definition.MaximumSlope)
+            int ownedCount =
+                GetOwnedCount(definition);
+
+            if (
+                definition.RequiresOwnership &&
+                ownedCount <= 0
+            )
             {
-                previewValid = false;
-                validationMessage =
-                    $"Surface is too steep ({slope:0}°).";
-                ApplyPreviewColor(false);
-                PreviewChanged?.Invoke();
+                SetInvalid(
+                    $"You do not own a packaged " +
+                    $"{definition.DisplayName}.",
+                    true,
+                    position,
+                    rotation
+                );
                 return;
             }
 
@@ -509,11 +572,105 @@ namespace ShadowSupply.Placement
 
             validationMessage =
                 previewValid
-                    ? "Valid placement."
+                    ? $"Valid placement. Owned: {ownedCount}"
                     : "Placement is blocked.";
 
             ApplyPreviewColor(previewValid);
             PreviewChanged?.Invoke();
+        }
+
+        private bool IsSurfaceValid(
+            PlaceableDefinition definition,
+            Vector3 normal
+        )
+        {
+            float upDot =
+                Vector3.Dot(
+                    normal.normalized,
+                    Vector3.up
+                );
+
+            switch (definition.SurfaceType)
+            {
+                case PlacementSurfaceType.Floor:
+                    float slope =
+                        Vector3.Angle(
+                            normal,
+                            Vector3.up
+                        );
+
+                    return
+                        upDot > 0f &&
+                        slope <= definition.MaximumSlope;
+
+                case PlacementSurfaceType.Wall:
+                    return Mathf.Abs(upDot) <= 0.35f;
+
+                case PlacementSurfaceType.Ceiling:
+                    return upDot <= -0.75f;
+
+                default:
+                    return false;
+            }
+        }
+
+        private static string GetSurfaceFailureMessage(
+            PlaceableDefinition definition
+        )
+        {
+            switch (definition.SurfaceType)
+            {
+                case PlacementSurfaceType.Wall:
+                    return "This item must be mounted on a wall.";
+                case PlacementSurfaceType.Ceiling:
+                    return "This item must be mounted on a ceiling.";
+                default:
+                    return "This item must be placed on a floor.";
+            }
+        }
+
+        private Quaternion BuildPreviewRotation(
+            PlaceableDefinition definition,
+            Vector3 surfaceNormal
+        )
+        {
+            switch (definition.SurfaceType)
+            {
+                case PlacementSurfaceType.Wall:
+                    Quaternion wallFacing =
+                        Quaternion.LookRotation(
+                            surfaceNormal.normalized,
+                            Vector3.up
+                        );
+
+                    return
+                        wallFacing *
+                        Quaternion.AngleAxis(
+                            previewRotationOffset,
+                            Vector3.forward
+                        );
+
+                case PlacementSurfaceType.Ceiling:
+                    Quaternion ceilingFacing =
+                        Quaternion.FromToRotation(
+                            Vector3.up,
+                            -surfaceNormal.normalized
+                        );
+
+                    return
+                        ceilingFacing *
+                        Quaternion.AngleAxis(
+                            previewRotationOffset,
+                            Vector3.up
+                        );
+
+                default:
+                    return Quaternion.Euler(
+                        0f,
+                        previewRotationOffset,
+                        0f
+                    );
+            }
         }
 
         private bool IsPlacementClear(
@@ -523,11 +680,8 @@ namespace ShadowSupply.Placement
             Collider supportCollider
         )
         {
-            Vector3 size =
-                definition.BoundsSize;
-
             Vector3 halfExtents =
-                size * 0.5f;
+                definition.BoundsSize * 0.5f;
 
             halfExtents.x =
                 Mathf.Max(
@@ -597,6 +751,27 @@ namespace ShadowSupply.Placement
                 return;
             }
 
+            ItemStack consumed = null;
+
+            if (definition.RequiresOwnership)
+            {
+                if (
+                    inventory == null ||
+                    !inventory.TryRemoveItem(
+                        definition.InventoryItem,
+                        1,
+                        out consumed
+                    )
+                )
+                {
+                    SetTransientMessage(
+                        $"You do not own {definition.DisplayName}.",
+                        2.5f
+                    );
+                    return;
+                }
+            }
+
             PlacedObject placedObject =
                 PlacedObject.Spawn(
                     definition,
@@ -606,24 +781,44 @@ namespace ShadowSupply.Placement
 
             if (placedObject == null)
             {
+                if (
+                    consumed != null &&
+                    inventory != null
+                )
+                {
+                    inventory.AddItem(
+                        consumed.Item,
+                        consumed.Quantity,
+                        consumed.Quality,
+                        consumed.Condition
+                    );
+                }
+
                 SetTransientMessage(
-                    "Placement failed.",
+                    "Placement failed. Item returned.",
                     2.5f
                 );
                 return;
             }
 
+            int remaining =
+                GetOwnedCount(definition);
+
             SetTransientMessage(
-                $"Placed {definition.DisplayName}.",
+                $"Placed {definition.DisplayName}. " +
+                $"Owned: {remaining}",
                 2.5f
             );
 
             UpdatePreview();
         }
 
-        private void RemoveTargetedPlacedObject()
+        private void PackTargetedPlacedObject()
         {
-            if (placementCamera == null)
+            if (
+                placementCamera == null ||
+                inventory == null
+            )
             {
                 return;
             }
@@ -653,7 +848,10 @@ namespace ShadowSupply.Placement
             PlacedObject placedObject =
                 hit.collider.GetComponentInParent<PlacedObject>();
 
-            if (placedObject == null)
+            if (
+                placedObject == null ||
+                placedObject.Definition == null
+            )
             {
                 SetTransientMessage(
                     "No placed object targeted.",
@@ -662,16 +860,46 @@ namespace ShadowSupply.Placement
                 return;
             }
 
-            string objectName =
-                placedObject.Definition != null
-                    ? placedObject.Definition.DisplayName
-                    : placedObject.gameObject.name;
+            PlaceableDefinition definition =
+                placedObject.Definition;
+
+            if (
+                definition.InventoryItem == null ||
+                !inventory.HasSpaceFor(
+                    definition.InventoryItem,
+                    1
+                )
+            )
+            {
+                SetTransientMessage(
+                    "Inventory is full. Furniture was not packed.",
+                    2.5f
+                );
+                return;
+            }
+
+            int remaining =
+                inventory.AddItem(
+                    definition.InventoryItem,
+                    1,
+                    ItemQuality.Standard,
+                    1f
+                );
+
+            if (remaining > 0)
+            {
+                SetTransientMessage(
+                    "Inventory is full. Furniture was not packed.",
+                    2.5f
+                );
+                return;
+            }
 
             placedObject.gameObject.SetActive(false);
             Destroy(placedObject.gameObject);
 
             SetTransientMessage(
-                $"Removed {objectName}.",
+                $"Packed {definition.DisplayName}.",
                 2.5f
             );
         }
@@ -749,6 +977,29 @@ namespace ShadowSupply.Placement
             previewObject = null;
             previewRenderers =
                 Array.Empty<Renderer>();
+        }
+
+        private void SetInvalid(
+            string message,
+            bool hasHit,
+            Vector3 position = default,
+            Quaternion rotation = default
+        )
+        {
+            previewValid = false;
+            hasSurfaceHit = hasHit;
+            validationMessage = message;
+
+            if (hasHit && previewObject != null)
+            {
+                ApplyPreviewTransform(
+                    position,
+                    rotation
+                );
+            }
+
+            ApplyPreviewColor(false);
+            PreviewChanged?.Invoke();
         }
 
         private void ApplyPreviewTransform(
@@ -830,7 +1081,35 @@ namespace ShadowSupply.Placement
             PreviewChanged?.Invoke();
         }
 
-        private static Vector3 SnapPosition(
+        private int FindFirstOwnedDefinitionIndex()
+        {
+            if (database == null)
+            {
+                return -1;
+            }
+
+            for (
+                int index = 0;
+                index < database.Definitions.Count;
+                index++
+            )
+            {
+                PlaceableDefinition definition =
+                    database.GetAt(index);
+
+                if (
+                    definition != null &&
+                    GetOwnedCount(definition) > 0
+                )
+                {
+                    return index;
+                }
+            }
+
+            return -1;
+        }
+
+        private static Vector3 SnapFloorPosition(
             Vector3 position,
             float gridSize
         )
@@ -845,6 +1124,49 @@ namespace ShadowSupply.Placement
                 Mathf.Round(position.z / size) * size;
 
             return position;
+        }
+
+        private static Vector3 SnapWallPosition(
+            Vector3 position,
+            Vector3 normal,
+            float gridSize
+        )
+        {
+            float size =
+                Mathf.Max(0.05f, gridSize);
+
+            Vector3 wallNormal =
+                normal.normalized;
+
+            Vector3 right =
+                Vector3.Cross(
+                    Vector3.up,
+                    wallNormal
+                ).normalized;
+
+            if (right.sqrMagnitude < 0.001f)
+            {
+                right = Vector3.right;
+            }
+
+            float normalDistance =
+                Vector3.Dot(
+                    position,
+                    wallNormal
+                );
+
+            float rightDistance =
+                Mathf.Round(
+                    Vector3.Dot(position, right) / size
+                ) * size;
+
+            float verticalDistance =
+                Mathf.Round(position.y / size) * size;
+
+            return
+                wallNormal * normalDistance +
+                right * rightDistance +
+                Vector3.up * verticalDistance;
         }
 
 #if UNITY_EDITOR

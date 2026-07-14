@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bae1f4bf4affe814da455c745759da15, type: 3}
+  m_Name: PLACEABLE_DoorKeypad
+  m_EditorClassIdentifier: 
+  placeableId: e7d51bb02c22426a8902ad44018ac165
+  displayName: Door Keypad
+  description: A wall-mounted access-control hardware foundation.
+  inventoryItem: {fileID: 11400000, guid: 7c58f08f156723d488bd70d844d31bd8, type: 2}
+  purchasePrice: 125
+  prefab: {fileID: 4423301151789901747, guid: 04f2236d4b88b6f449cfabef5889d38e, type: 3}
+  surfaceType: 1
+  boundsCenter: {x: 0, y: 0, z: 0.04}
+  boundsSize: {x: 0.18881746, y: 0.27054587, z: 0.08}
+  gridSize: 0.1
+  rotationStep: 90
+  maximumSlope: 20

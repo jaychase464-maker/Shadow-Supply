@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: PLACEABLE_DevStorageShelf
   m_EditorClassIdentifier: 
   placeableId: d50bc2333418484696b0bf34593cbbef
-  displayName: Storage Shelf
-  description: A metal shelving unit prepared for visible inventory storage.
-  prefab: {fileID: 609748384570984704, guid: a65b29957e442064c93c67f00ec528ee, type: 3}
+  displayName: Storage Rack
+  description: Heavy pallet racking prepared for physical product storage.
+  inventoryItem: {fileID: 11400000, guid: ad0e5cafd513d8a4b87e72110cd62406, type: 2}
+  purchasePrice: 210
+  prefab: {fileID: 1900547570392853089, guid: 8a8266335175838449427f0b6a21009f, type: 3}
   surfaceType: 0
-  boundsCenter: {x: 0, y: 1.05, z: 0}
-  boundsSize: {x: 1.8, y: 2.1, z: 0.55}
+  boundsCenter: {x: 0, y: 0.9928156, z: 0}
+  boundsSize: {x: 1.2115741, y: 1.9856312, z: 0.79999995}
   gridSize: 0.25
   rotationStep: 15
   maximumSlope: 20

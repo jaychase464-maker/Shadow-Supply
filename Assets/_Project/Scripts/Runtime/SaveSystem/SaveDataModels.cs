@@ -20,6 +20,10 @@ namespace ShadowSupply.SaveSystem
             new List<WorldItemSaveData>();
         public List<PlacedObjectSaveData> placedObjects =
             new List<PlacedObjectSaveData>();
+        public WalletSaveData wallet =
+            new WalletSaveData();
+        public List<FurnitureDeliverySaveData> furnitureDeliveries =
+            new List<FurnitureDeliverySaveData>();
     }
 
     [Serializable]
@@ -75,6 +79,25 @@ namespace ShadowSupply.SaveSystem
             new Vector3SaveData();
         public Vector3SaveData angularVelocity =
             new Vector3SaveData();
+    }
+
+    [Serializable]
+    public sealed class WalletSaveData
+    {
+        public int cleanCash = 1200;
+        public int dirtyCash;
+    }
+
+    [Serializable]
+    public sealed class FurnitureDeliverySaveData
+    {
+        public string persistentId;
+        public string itemId;
+        public int quantity;
+        public Vector3SaveData position =
+            new Vector3SaveData();
+        public QuaternionSaveData rotation =
+            new QuaternionSaveData();
     }
 
     [Serializable]
