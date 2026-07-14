@@ -1,47 +1,69 @@
 # Shadow Supply — Current Status
 
-## Current test version
+## Current confirmed version
 
-`v0.8.3-interactive-production-framework`
+`v0.8.5-workbench-target-lighting-hotfix`
 
-## Confirmed before this upgrade
+## Confirmed systems
 
+- First-person controller
+- Inventory and hotbar
+- Save/load foundation
+- Persistent furniture placement
+- Furniture ownership and deliveries
+- Modular visible player character
+- Modular starter garage
+- Functional garage doors and lighting
+- Main and branch electrical circuits
 - Physical workbench plug
-- Cable floor following
-- Breaker and circuit system
+- Individual outlet sockets
+- Cable sag, reach, and floor following
+- Breaker state and load tracking
+- Electrical save persistence
 - Powered workbench
 - First production recipe
-- Material consumption
-- Output quality
+- Ingredient quality calculation
+- Manual top-down production view
+- Clickable reusable tool step
+- Draggable physical ingredients
+- Open package and drop zone
+- Clickable closing lid
 - Finished-output collection
-- Schema-6 production persistence
+- Partial interactive-production save persistence
+- Broad workbench interaction target
+- Startup lighting synchronization
+- Fixture-origin garage lighting
+- Emissive fluorescent diffusers
 
-## Current unconfirmed upgrade
+## Locked core direction
 
-### Interactive production framework
+- Every future production recipe must use manual interaction steps.
+- Major opportunities must be unlocked through NPC relationships, factions, districts, skills, properties, equipment, or earned introductions.
+- A generic level cannot be the sole unlock requirement.
+- The story must feed a persistent sandbox rather than end the game.
+- New worlds must produce materially different criminal careers.
 
-- Parts spawn across the table
-- Reusable tools are clicked
-- Consumed parts are dragged
-- Parts must be dropped into the open package
-- Incorrect drops reset
-- The package lid must be clicked
-- Lid close produces the finished package
-- Power loss preserves progress
-- Partial manual progress saves and loads
+## Canonical release vision
 
-## Locked production direction
+Read:
 
-Every future production recipe must use manual interaction steps. Passive
-timer-only recipes are not part of the intended Shadow Supply gameplay loop.
+`Documentation/SHADOW_SUPPLY_GAME_BIBLE.md`
 
-## Next after confirmation
+## Next gameplay milestone
 
-### Milestone 8C — First Buyer Order
+### Milestone 8C — First Persistent Buyer Relationship and Order
 
-- buyer contact
-- requested product and quantity
-- quality requirement
-- deadline
-- delivery point
-- package handoff
+The first buyer must introduce:
+
+- Persistent NPC identity
+- Rapport
+- Trust
+- Respect
+- Product preference
+- Quality requirement
+- Quantity
+- Deadline
+- Physical handoff
+- Relationship rewards and penalties
+- Referral potential
+- Future order progression

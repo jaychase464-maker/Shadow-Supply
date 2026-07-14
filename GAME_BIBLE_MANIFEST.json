@@ -1,0 +1,19 @@
+{
+  "name": "ShadowSupply_GameBible_v1.0.0",
+  "bible_version": "1.0.0",
+  "created": "2026-07-14",
+  "repository_target": "jaychase464-maker/Shadow-Supply",
+  "extract_to": "repository root",
+  "unity_setup_required": false,
+  "files": [
+    "CHATGPT_START_HERE.md",
+    "CURRENT_STATUS.md",
+    "DISCORD_GAME_BIBLE_UPDATE.md",
+    "Documentation/GAME_BIBLE_CHANGELOG.md",
+    "Documentation/GAME_BIBLE_CHANGE_REQUEST_TEMPLATE.md",
+    "Documentation/Images/production_progression_concept.png",
+    "Documentation/SHADOW_SUPPLY_GAME_BIBLE.md",
+    "PROJECT_CONTEXT.md",
+    "README_GAME_BIBLE_INSTALL.md"
+  ]
+}
