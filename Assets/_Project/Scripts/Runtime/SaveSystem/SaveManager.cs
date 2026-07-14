@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using ShadowSupply.Character;
 using ShadowSupply.Delivery;
 using ShadowSupply.Economy;
 using ShadowSupply.Inventory;
@@ -15,9 +16,9 @@ namespace ShadowSupply.SaveSystem
     [DefaultExecutionOrder(-500)]
     public sealed class SaveManager : MonoBehaviour
     {
-        public const int CurrentSaveVersion = 3;
+        public const int CurrentSaveVersion = 4;
         public const string CurrentGameVersion =
-            "v0.5.0-furniture-ownership";
+            "v0.6.2-rigged-player-integration";
 
         public static SaveManager Instance { get; private set; }
 
@@ -34,6 +35,7 @@ namespace ShadowSupply.SaveSystem
         [SerializeField] private PlayerInventory playerInventory;
         [SerializeField] private HotbarController hotbarController;
         [SerializeField] private FirstPersonController firstPersonController;
+        [SerializeField] private PlayerCharacterRuntime playerCharacterRuntime;
 
         [Header("Slots")]
         [SerializeField, Range(1, 3)] private int activeSlot = 1;
@@ -403,7 +405,9 @@ namespace ShadowSupply.SaveSystem
                 wallet =
                     CaptureWallet(),
                 furnitureDeliveries =
-                    CaptureFurnitureDeliveries()
+                    CaptureFurnitureDeliveries(),
+                characterAppearance =
+                    CaptureCharacterAppearance()
             };
 
             return data;
@@ -635,6 +639,106 @@ namespace ShadowSupply.SaveSystem
             return data;
         }
 
+
+        private CharacterAppearanceSaveData
+            CaptureCharacterAppearance()
+        {
+            CharacterAppearanceSaveData data =
+                new CharacterAppearanceSaveData();
+
+            if (playerCharacterRuntime == null)
+            {
+                return data;
+            }
+
+            data.baseBodyPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.BaseBody,
+                    data.baseBodyPartId
+                );
+
+            data.hairPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.Hair,
+                    data.hairPartId
+                );
+
+            data.facialHairPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.FacialHair,
+                    data.facialHairPartId
+                );
+
+            data.underwearPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.Underwear,
+                    data.underwearPartId
+                );
+
+            data.torsoPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.Torso,
+                    string.Empty
+                );
+
+            data.legsPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.Legs,
+                    string.Empty
+                );
+
+            data.feetPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.Feet,
+                    string.Empty
+                );
+
+            data.glovesPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.Gloves,
+                    string.Empty
+                );
+
+            data.headwearPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.Headwear,
+                    string.Empty
+                );
+
+            data.backpackPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.Backpack,
+                    string.Empty
+                );
+
+            data.chestAccessoryPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.ChestAccessory,
+                    string.Empty
+                );
+
+            data.hipAccessoryPartId =
+                GetEquippedPartIdOrDefault(
+                    CharacterSlot.HipAccessory,
+                    string.Empty
+                );
+
+            return data;
+        }
+
+        private string GetEquippedPartIdOrDefault(
+            CharacterSlot slot,
+            string fallback
+        )
+        {
+            string partId =
+                playerCharacterRuntime.GetEquippedPartId(slot);
+
+            return string.IsNullOrWhiteSpace(partId)
+                ? fallback
+                : partId;
+        }
+
         private void ApplySaveData(SaveGameData data)
         {
             ResolveSceneReferences();
@@ -655,6 +759,7 @@ namespace ShadowSupply.SaveSystem
             RestoreWorldItems(data.worldItems);
             RestoreWallet(data.wallet);
             RestoreFurnitureDeliveries(data.furnitureDeliveries);
+            RestoreCharacterAppearance(data.characterAppearance);
 
             if (hotbarController != null)
             {
@@ -946,6 +1051,45 @@ namespace ShadowSupply.SaveSystem
             }
         }
 
+
+        private void RestoreCharacterAppearance(
+            CharacterAppearanceSaveData data
+        )
+        {
+            if (
+                playerCharacterRuntime == null ||
+                data == null
+            )
+            {
+                return;
+            }
+
+            EquipAppearancePart(data.baseBodyPartId);
+            EquipAppearancePart(data.hairPartId);
+            EquipAppearancePart(data.facialHairPartId);
+            EquipAppearancePart(data.underwearPartId);
+            EquipAppearancePart(data.torsoPartId);
+            EquipAppearancePart(data.legsPartId);
+            EquipAppearancePart(data.feetPartId);
+            EquipAppearancePart(data.glovesPartId);
+            EquipAppearancePart(data.headwearPartId);
+            EquipAppearancePart(data.backpackPartId);
+            EquipAppearancePart(data.chestAccessoryPartId);
+            EquipAppearancePart(data.hipAccessoryPartId);
+
+            playerCharacterRuntime.RefreshVisibility();
+        }
+
+        private void EquipAppearancePart(
+            string partId
+        )
+        {
+            if (!string.IsNullOrWhiteSpace(partId))
+            {
+                playerCharacterRuntime.EquipPart(partId);
+            }
+        }
+
         private static void MigrateSaveData(
             SaveGameData data
         )
@@ -979,6 +1123,9 @@ namespace ShadowSupply.SaveSystem
             data.furnitureDeliveries ??=
                 new List<FurnitureDeliverySaveData>();
 
+            data.characterAppearance ??=
+                new CharacterAppearanceSaveData();
+
             if (data.saveVersion < 3)
             {
                 if (data.wallet.cleanCash <= 0)
@@ -987,7 +1134,13 @@ namespace ShadowSupply.SaveSystem
                 }
             }
 
-            data.saveVersion = 3;
+            if (data.saveVersion < 4)
+            {
+                data.characterAppearance =
+                    new CharacterAppearanceSaveData();
+            }
+
+            data.saveVersion = 4;
         }
 
         private void RestoreWallet(
@@ -1157,6 +1310,12 @@ namespace ShadowSupply.SaveSystem
                 firstPersonController =
                     playerTransform.GetComponent<FirstPersonController>();
             }
+
+            if (playerCharacterRuntime == null)
+            {
+                playerCharacterRuntime =
+                    FindFirstObjectByType<PlayerCharacterRuntime>();
+            }
         }
 
         private void HandleSceneLoaded(
@@ -1168,6 +1327,7 @@ namespace ShadowSupply.SaveSystem
             playerInventory = null;
             hotbarController = null;
             firstPersonController = null;
+            playerCharacterRuntime = null;
 
             ResolveSceneReferences();
 

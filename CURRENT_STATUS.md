@@ -2,22 +2,9 @@
 
 ## Current version
 
-- Current clean rewrite: `v0.5.0-furniture-ownership`
-- Repository: `jaychase464-maker/Shadow-Supply`
-- Source-of-truth branch: `main`
-- Save schema version: `3`
-
-## Unity version
-
-- Unity Editor: `6000.0.58f2`
-- Revision: `92dee566b325`
-
-## Package versions
-
-- Universal Render Pipeline: `17.0.4`
-- Input System: `1.14.2`
-- AI Navigation: `2.0.9`
-- uGUI: `2.0.0`
+- Current clean rewrite: `v0.6.2-rigged-player-integration`
+- Save schema: `4`
+- Unity: `6000.0.58f2`
 
 ## Completed milestones
 
@@ -26,42 +13,44 @@
 - Milestone 3 — Save and Load Foundation
 - Inventory UI production pass
 - Milestone 4 — Persistent Furniture Placement
+- Milestone 5 — Furniture Ownership and Acquisition
+- Milestone 6A — Modular Character Asset Foundation
 
 ## Current milestone
 
-### Milestone 5 — Furniture Ownership and Acquisition
+### Milestone 6B — Rigged Player Integration
 
-- Clean-cash wallet
-- Furniture prices
-- Supplier shop interface
-- Physical furniture delivery crates
-- Persistent uncollected deliveries
-- Furniture inventory packages
-- Placement consumes ownership
-- Packing returns ownership
-- Wall-placement foundation
-- CCTV and keypad wall placeables
-- Imported workbench, rack, desk, camera, and keypad models
-- Save schema version `3`
+Included:
 
-## Current compilation state
+- Confirmed Mixamo humanoid skeleton
+- Unity Humanoid Avatar setup
+- Rigged gameplay prefab
+- Full first-person body
+- Local head and face hiding
+- Complete shadow-only body
+- Procedural locomotion placeholder
+- Bone-bound equipment sockets
+- Backpack-ready attachment foundation
+- Appearance save-data schema
 
-- Awaiting local Unity import, compilation, setup, and acceptance testing
+## Next test gate
 
-## Current known risks
+The user must verify in Unity:
 
-- Imported model orientation and scale require local visual confirmation.
-- The utility cabinet still uses generated placeholder geometry.
-- Shop and build HUDs are development interfaces.
-- Deliveries currently arrive immediately rather than using travel time.
-- Furniture ordering is not yet connected to ShadowOS.
-- Final source-asset licenses must be verified before release.
+1. Humanoid validation
+2. Character orientation
+3. Character height and placement
+4. Looking-down body visibility
+5. Camera clipping
+6. Walk/sprint/crouch/jump deformation
+7. Complete character shadow
+8. Save/load migration
 
-## Next planned work
+## Next development work after validation
 
-1. Validate model scale, orientation, materials, and colliders.
-2. Validate ownership consumption and returns.
-3. Validate wallet and delivery persistence.
-4. Push Milestone 5 after acceptance testing.
-5. Build the starter garage vertical slice.
-6. Begin physical electrical placement using the wall-placement foundation.
+- Replace procedural motion with production animation clips
+- Add first clothing item
+- Add backpack equipment test
+- Add clothing/body-region hiding
+- Add character customization UI
+- Continue to the starter garage vertical slice

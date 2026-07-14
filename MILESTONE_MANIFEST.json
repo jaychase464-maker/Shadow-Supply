@@ -1,27 +1,12 @@
 {
-  "name": "ShadowSupply_v0.5.5_FurnitureCollisionHotfix",
-  "version": "v0.5.5-furniture-collision-hotfix",
+  "name": "ShadowSupply_v0.6.5_RightAnkleSpinHotfix",
+  "version": "v0.6.5-right-ankle-spin-hotfix",
   "unity_version": "6000.0.58f2",
   "extract_to": "Unity project root",
-  "requires_rerun": "Shadow Supply/Setup/Apply Milestone 5 Furniture Ownership",
-  "collision_profiles": {
-    "workbench": [
-      "tabletop",
-      "front_left_leg",
-      "front_right_leg",
-      "back_left_leg",
-      "back_right_leg"
-    ],
-    "office_desk": [
-      "desktop",
-      "left_pedestal",
-      "right_pedestal"
-    ],
-    "other_placeables": "unchanged"
-  },
+  "requires_setup_rerun": false,
   "files": [
-    "Assets/_Project/Scripts/Editor/Milestone5FurnitureOwnershipSetup.cs",
-    "Documentation/FURNITURE_COLLISION_HOTFIX_v0.5.5.md",
-    "DISCORD_FURNITURE_COLLISION_HOTFIX_v0.5.5.md"
+    "Assets/_Project/Scripts/Runtime/Character/HumanoidFootAlignment.cs",
+    "DISCORD_RIGHT_ANKLE_SPIN_HOTFIX_v0.6.5.md",
+    "Documentation/RIGHT_ANKLE_SPIN_HOTFIX_v0.6.5.md"
   ]
 }

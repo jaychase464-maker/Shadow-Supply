@@ -30,7 +30,12 @@ namespace ShadowSupply.Player
         [SerializeField, Min(0.1f)] private float crouchTransitionSpeed = 10f;
         [SerializeField] private LayerMask obstructionMask = ~0;
 
+        private const int ClearanceBufferSize = 32;
+
         private CharacterController characterController;
+
+        private readonly Collider[] clearanceHits =
+            new Collider[ClearanceBufferSize];
 
         private InputAction moveAction;
         private InputAction lookAction;
@@ -40,6 +45,7 @@ namespace ShadowSupply.Player
         private InputAction cursorAction;
 
         private Vector3 horizontalVelocity;
+        private Vector2 currentMoveInput;
         private float verticalVelocity;
         private float cameraPitch;
         private float standingCameraLocalY;
@@ -51,6 +57,45 @@ namespace ShadowSupply.Player
 
         public bool IsCrouching { get; private set; }
         public float CameraPitch => cameraPitch;
+        public Vector2 MoveInput => currentMoveInput;
+
+        public float CrouchBlend =>
+            characterController == null
+                ? IsCrouching
+                    ? 1f
+                    : 0f
+                : 1f - Mathf.InverseLerp(
+                    crouchingHeight,
+                    standingHeight,
+                    characterController.height
+                );
+        public float VerticalVelocity => verticalVelocity;
+
+        public float HorizontalSpeed =>
+            new Vector2(
+                horizontalVelocity.x,
+                horizontalVelocity.z
+            ).magnitude;
+
+        public float WalkSpeed => walkSpeed;
+        public float SprintSpeed => sprintSpeed;
+        public float CrouchSpeed => crouchSpeed;
+
+        public bool IsGrounded =>
+            characterController != null &&
+            characterController.isGrounded;
+
+        public bool IsSprinting =>
+            !IsCrouching &&
+            currentMoveInput.sqrMagnitude > 0.01f &&
+            sprintAction != null &&
+            sprintAction.IsPressed();
+
+        public float NormalizedMovementSpeed =>
+            Mathf.Clamp01(
+                HorizontalSpeed /
+                Mathf.Max(0.1f, sprintSpeed)
+            );
 
         private void Awake()
         {
@@ -107,6 +152,8 @@ namespace ShadowSupply.Player
 
         private void OnDisable()
         {
+            currentMoveInput = Vector2.zero;
+
             if (!inputInitialized)
             {
                 return;
@@ -225,12 +272,12 @@ namespace ShadowSupply.Player
 
         private void HandleMovement()
         {
-            Vector2 moveInput =
+            currentMoveInput =
                 moveAction.ReadValue<Vector2>();
 
             Vector3 desiredDirection =
-                transform.right * moveInput.x +
-                transform.forward * moveInput.y;
+                transform.right * currentMoveInput.x +
+                transform.forward * currentMoveInput.y;
 
             desiredDirection =
                 Vector3.ClampMagnitude(desiredDirection, 1f);
@@ -387,26 +434,97 @@ namespace ShadowSupply.Player
 
         private bool HasStandingClearance()
         {
+            if (characterController == null)
+            {
+                return true;
+            }
+
             float radius = Mathf.Max(
-                characterController.radius - 0.02f,
+                characterController.radius -
+                characterController.skinWidth -
+                0.01f,
                 0.05f
             );
 
+            float currentHeight = Mathf.Max(
+                characterController.height,
+                crouchingHeight
+            );
+
+            float lowerCenterHeight = Mathf.Max(
+                currentHeight - radius + 0.03f,
+                radius + 0.08f
+            );
+
+            float upperCenterHeight =
+                standingHeight - radius - 0.02f;
+
+            if (upperCenterHeight <= lowerCenterHeight)
+            {
+                return true;
+            }
+
             Vector3 bottom =
                 transform.position +
-                Vector3.up * radius;
+                Vector3.up * lowerCenterHeight;
 
             Vector3 top =
                 transform.position +
-                Vector3.up * (standingHeight - radius);
+                Vector3.up * upperCenterHeight;
 
-            return !Physics.CheckCapsule(
-                bottom,
-                top,
-                radius,
-                obstructionMask,
-                QueryTriggerInteraction.Ignore
-            );
+            int hitCount =
+                Physics.OverlapCapsuleNonAlloc(
+                    bottom,
+                    top,
+                    radius,
+                    clearanceHits,
+                    obstructionMask,
+                    QueryTriggerInteraction.Ignore
+                );
+
+            for (
+                int index = 0;
+                index < hitCount;
+                index++
+            )
+            {
+                Collider hit =
+                    clearanceHits[index];
+
+                clearanceHits[index] = null;
+
+                if (
+                    hit == null ||
+                    !hit.enabled ||
+                    hit == characterController
+                )
+                {
+                    continue;
+                }
+
+                Transform hitTransform =
+                    hit.transform;
+
+                if (
+                    hitTransform == transform ||
+                    hitTransform.IsChildOf(transform)
+                )
+                {
+                    continue;
+                }
+
+                if (
+                    hit.bounds.max.y <=
+                    transform.position.y + 0.08f
+                )
+                {
+                    continue;
+                }
+
+                return false;
+            }
+
+            return true;
         }
 
         private static void SetCursorLocked(bool locked)

@@ -24,6 +24,8 @@ namespace ShadowSupply.SaveSystem
             new WalletSaveData();
         public List<FurnitureDeliverySaveData> furnitureDeliveries =
             new List<FurnitureDeliverySaveData>();
+        public CharacterAppearanceSaveData characterAppearance =
+            new CharacterAppearanceSaveData();
     }
 
     [Serializable]
@@ -109,6 +111,27 @@ namespace ShadowSupply.SaveSystem
             new Vector3SaveData();
         public QuaternionSaveData rotation =
             new QuaternionSaveData();
+    }
+
+    [Serializable]
+    public sealed class CharacterAppearanceSaveData
+    {
+        public string baseBodyPartId =
+            "player-base-body-v1";
+        public string hairPartId =
+            "player-hair-buzz-cut-v1";
+        public string facialHairPartId =
+            "player-facial-hair-chin-curtain-v1";
+        public string underwearPartId =
+            "player-underwear-briefs-v1";
+        public string torsoPartId;
+        public string legsPartId;
+        public string feetPartId;
+        public string glovesPartId;
+        public string headwearPartId;
+        public string backpackPartId;
+        public string chestAccessoryPartId;
+        public string hipAccessoryPartId;
     }
 
     [Serializable]
