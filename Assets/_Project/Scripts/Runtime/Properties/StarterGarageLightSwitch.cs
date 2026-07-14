@@ -20,6 +20,7 @@ namespace ShadowSupply.Properties
             "garage-lighting";
 
         private bool lightsOn;
+        private int startupRefreshFrames;
 
         public bool IsOn => lightsOn;
 
@@ -41,6 +42,30 @@ namespace ShadowSupply.Properties
                 powerPanel.PowerChanged += ApplyLights;
             }
 
+            startupRefreshFrames = 8;
+            ApplyLights();
+        }
+
+        private void Start()
+        {
+            startupRefreshFrames =
+                Mathf.Max(
+                    startupRefreshFrames,
+                    8
+                );
+
+            ApplyLights();
+            ElectricalGridSystem.NotifyChanged();
+        }
+
+        private void LateUpdate()
+        {
+            if (startupRefreshFrames <= 0)
+            {
+                return;
+            }
+
+            startupRefreshFrames--;
             ApplyLights();
         }
 

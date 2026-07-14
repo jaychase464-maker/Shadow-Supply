@@ -1,14 +1,24 @@
 {
-  "name": "ShadowSupply_v0.8.1_CableFloorClippingHotfix",
-  "version": "v0.8.1-cable-floor-clipping-hotfix",
+  "name": "ShadowSupply_v0.8.5_WorkbenchTargetLightingHotfix",
+  "version": "v0.8.5-workbench-target-lighting-hotfix",
   "unity_version": "6000.0.58f2",
   "extract_to": "Unity project root",
-  "requires_setup_rerun": false,
+  "setup_menu": "Shadow Supply/Setup/Apply v0.8.5 Workbench Target + Lighting Hotfix",
+  "validation_menu": "Shadow Supply/Validation/Validate v0.8.5 Workbench Target + Lighting",
   "confirmed": false,
   "discord_post_withheld": true,
+  "fixes": [
+    "large non-blocking workbench interaction target",
+    "startup light-state synchronization",
+    "three light sources per fluorescent fixture",
+    "emissive diffuser visual synchronized to real light state"
+  ],
   "files": [
-    "Assets/_Project/Scripts/Runtime/Electrical/PowerCableVisual.cs",
+    "Assets/_Project/Scripts/Editor/Milestone8InteractionLightingHotfixSetup.cs",
+    "Assets/_Project/Scripts/Runtime/Production/PoweredWorkbenchProduction.cs",
+    "Assets/_Project/Scripts/Runtime/Properties/StarterGarageFluorescentFixture.cs",
+    "Assets/_Project/Scripts/Runtime/Properties/StarterGarageLightSwitch.cs",
     "DISCORD_DRAFT_DO_NOT_POST_UNTIL_CONFIRMED.md",
-    "Documentation/CABLE_FLOOR_CLIPPING_HOTFIX_v0.8.1.md"
+    "Documentation/WORKBENCH_TARGET_LIGHTING_HOTFIX_v0.8.5.md"
   ]
 }

@@ -10,6 +10,7 @@ using ShadowSupply.Inventory;
 using ShadowSupply.Player;
 using ShadowSupply.Placement;
 using ShadowSupply.Properties;
+using ShadowSupply.Production;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,9 +19,9 @@ namespace ShadowSupply.SaveSystem
     [DefaultExecutionOrder(-500)]
     public sealed class SaveManager : MonoBehaviour
     {
-        public const int CurrentSaveVersion = 5;
+        public const int CurrentSaveVersion = 7;
         public const string CurrentGameVersion =
-            "v0.8.0-physical-garage-power";
+            "v0.8.3-interactive-production-framework";
 
         public static SaveManager Instance { get; private set; }
 
@@ -411,7 +412,9 @@ namespace ShadowSupply.SaveSystem
                 characterAppearance =
                     CaptureCharacterAppearance(),
                 electrical =
-                    CaptureElectricalSystem()
+                    CaptureElectricalSystem(),
+                productionWorkbenches =
+                    CaptureProductionWorkbenches()
             };
 
             return data;
@@ -829,6 +832,82 @@ namespace ShadowSupply.SaveSystem
             return data;
         }
 
+        private List<ProductionWorkbenchSaveData>
+            CaptureProductionWorkbenches()
+        {
+            List<ProductionWorkbenchSaveData> data =
+                new List<ProductionWorkbenchSaveData>();
+
+            PoweredWorkbenchProduction[] workbenches =
+                FindObjectsByType<
+                    PoweredWorkbenchProduction
+                >(
+                    FindObjectsInactive.Exclude,
+                    FindObjectsSortMode.None
+                );
+
+            foreach (
+                PoweredWorkbenchProduction workbench
+                in workbenches
+            )
+            {
+                if (
+                    workbench == null ||
+                    string.IsNullOrWhiteSpace(
+                        workbench.WorkbenchId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                bool hasPending =
+                    workbench.HasPendingOutput;
+
+                ItemQuality quality =
+                    hasPending
+                        ? workbench.PendingOutputQuality
+                        : workbench.ActiveOutputQuality;
+
+                float condition =
+                    hasPending
+                        ? workbench.PendingOutputCondition
+                        : workbench.ActiveOutputCondition;
+
+                data.Add(
+                    new ProductionWorkbenchSaveData
+                    {
+                        workbenchId =
+                            workbench.WorkbenchId,
+                        activeRecipeId =
+                            workbench.ActiveRecipe != null
+                                ? workbench.ActiveRecipe.RecipeId
+                                : string.Empty,
+                        remainingSeconds =
+                            workbench.RemainingSeconds,
+                        hasPendingOutput =
+                            hasPending,
+                        pendingItemId =
+                            workbench.PendingOutputItem != null
+                                ? workbench.PendingOutputItem.ItemId
+                                : string.Empty,
+                        pendingQuantity =
+                            workbench.PendingOutputQuantity,
+                        pendingQuality =
+                            (int)quality,
+                        pendingCondition =
+                            condition,
+                        completedStepIndices =
+                            new List<int>(
+                                workbench.CompletedStepIndices
+                            )
+                    }
+                );
+            }
+
+            return data;
+        }
+
         private void ApplySaveData(SaveGameData data)
         {
             ResolveSceneReferences();
@@ -851,6 +930,9 @@ namespace ShadowSupply.SaveSystem
             RestoreFurnitureDeliveries(data.furnitureDeliveries);
             RestoreCharacterAppearance(data.characterAppearance);
             RestoreElectricalSystem(data.electrical);
+            RestoreProductionWorkbenches(
+                data.productionWorkbenches
+            );
 
             if (hotbarController != null)
             {
@@ -1357,6 +1439,98 @@ namespace ShadowSupply.SaveSystem
             grid?.ForceRecalculate();
         }
 
+        private void RestoreProductionWorkbenches(
+            List<ProductionWorkbenchSaveData> data
+        )
+        {
+            PoweredWorkbenchProduction[] currentWorkbenches =
+                FindObjectsByType<
+                    PoweredWorkbenchProduction
+                >(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            Dictionary<
+                string,
+                PoweredWorkbenchProduction
+            > workbenchesById =
+                new Dictionary<
+                    string,
+                    PoweredWorkbenchProduction
+                >(StringComparer.Ordinal);
+
+            foreach (
+                PoweredWorkbenchProduction workbench
+                in currentWorkbenches
+            )
+            {
+                if (
+                    workbench == null ||
+                    string.IsNullOrWhiteSpace(
+                        workbench.WorkbenchId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                workbenchesById[
+                    workbench.WorkbenchId
+                ] = workbench;
+
+                workbench.RestoreProductionState(
+                    string.Empty,
+                    false,
+                    string.Empty,
+                    0,
+                    ItemQuality.Standard,
+                    1f,
+                    Array.Empty<int>(),
+                    itemDatabase
+                );
+            }
+
+            if (data == null)
+            {
+                return;
+            }
+
+            foreach (
+                ProductionWorkbenchSaveData workbenchData
+                in data
+            )
+            {
+                if (
+                    workbenchData == null ||
+                    string.IsNullOrWhiteSpace(
+                        workbenchData.workbenchId
+                    ) ||
+                    !workbenchesById.TryGetValue(
+                        workbenchData.workbenchId,
+                        out PoweredWorkbenchProduction
+                            workbench
+                    )
+                )
+                {
+                    continue;
+                }
+
+                workbench.RestoreProductionState(
+                    workbenchData.activeRecipeId,
+                    workbenchData.hasPendingOutput,
+                    workbenchData.pendingItemId,
+                    workbenchData.pendingQuantity,
+                    ParseQuality(
+                        workbenchData.pendingQuality
+                    ),
+                    workbenchData.pendingCondition,
+                    workbenchData.completedStepIndices,
+                    itemDatabase
+                );
+            }
+        }
+
         private static void MigrateSaveData(
             SaveGameData data
         )
@@ -1402,6 +1576,21 @@ namespace ShadowSupply.SaveSystem
             data.electrical.plugs ??=
                 new List<PowerPlugSaveData>();
 
+            data.productionWorkbenches ??=
+                new List<ProductionWorkbenchSaveData>();
+
+            foreach (
+                ProductionWorkbenchSaveData workbench
+                in data.productionWorkbenches
+            )
+            {
+                if (workbench != null)
+                {
+                    workbench.completedStepIndices ??=
+                        new List<int>();
+                }
+            }
+
             if (data.saveVersion < 3)
             {
                 if (data.wallet.cleanCash <= 0)
@@ -1422,7 +1611,28 @@ namespace ShadowSupply.SaveSystem
                     new ElectricalSystemSaveData();
             }
 
-            data.saveVersion = 5;
+            if (data.saveVersion < 6)
+            {
+                data.productionWorkbenches =
+                    new List<ProductionWorkbenchSaveData>();
+            }
+
+            if (data.saveVersion < 7)
+            {
+                foreach (
+                    ProductionWorkbenchSaveData workbench
+                    in data.productionWorkbenches
+                )
+                {
+                    if (workbench != null)
+                    {
+                        workbench.completedStepIndices =
+                            new List<int>();
+                    }
+                }
+            }
+
+            data.saveVersion = 7;
         }
 
         private void RestoreWallet(

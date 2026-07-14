@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ced89c098f9764ab27df9eb684a624, type: 3}
+  m_Name: ITEM_PackagingMaterial
+  m_EditorClassIdentifier: 
+  itemId: production-packaging-material
+  displayName: Packaging Material
+  description: Folded wrap, tape, and seals used to prepare finished goods for delivery.
+  category: 1
+  maximumStack: 20
+  baseValue: 8
+  displayPrefab: {fileID: 4628087692801289817, guid: f557272ae4fd9284a8cd7c2b46120855, type: 3}
+  fallbackPrimitive: 3
+  fallbackColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  heldLocalPosition: {x: 0.43, y: -0.38, z: 0.72}
+  heldLocalEulerAngles: {x: 6, y: -20, z: 0}
+  heldLocalScale: {x: 0.3, y: 0.3, z: 0.3}

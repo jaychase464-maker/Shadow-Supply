@@ -28,6 +28,9 @@ namespace ShadowSupply.SaveSystem
             new CharacterAppearanceSaveData();
         public ElectricalSystemSaveData electrical =
             new ElectricalSystemSaveData();
+        public List<ProductionWorkbenchSaveData>
+            productionWorkbenches =
+                new List<ProductionWorkbenchSaveData>();
     }
 
     [Serializable]
@@ -145,6 +148,21 @@ namespace ShadowSupply.SaveSystem
             new Vector3SaveData();
         public QuaternionSaveData rotation =
             new QuaternionSaveData();
+    }
+
+    [Serializable]
+    public sealed class ProductionWorkbenchSaveData
+    {
+        public string workbenchId;
+        public string activeRecipeId;
+        public float remainingSeconds;
+        public bool hasPendingOutput;
+        public string pendingItemId;
+        public int pendingQuantity;
+        public int pendingQuality;
+        public float pendingCondition = 1f;
+        public List<int> completedStepIndices =
+            new List<int>();
     }
 
     [Serializable]
