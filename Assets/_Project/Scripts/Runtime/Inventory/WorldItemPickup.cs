@@ -10,6 +10,12 @@ namespace ShadowSupply.Inventory
         [SerializeField] private ItemQuality quality = ItemQuality.Standard;
         [SerializeField, Range(0f, 1f)] private float condition = 1f;
 
+        private const float DroppedItemMass = 0.6f;
+        private const float DroppedItemLinearDamping = 0.08f;
+        private const float DroppedItemAngularDamping = 0.05f;
+        private const float MinimumTumbleSpeed = 4f;
+        private const float MaximumTumbleSpeed = 8f;
+
         public string InteractionPrompt =>
             item == null
                 ? "Invalid item"
@@ -85,31 +91,8 @@ namespace ShadowSupply.Inventory
                 return null;
             }
 
-            GameObject worldObject;
-
-            if (stack.Item.DisplayPrefab != null)
-            {
-                worldObject = Instantiate(
-                    stack.Item.DisplayPrefab,
-                    position,
-                    Quaternion.identity
-                );
-            }
-            else
-            {
-                worldObject = GameObject.CreatePrimitive(
-                    stack.Item.FallbackPrimitive
-                );
-
-                worldObject.transform.position = position;
-                worldObject.transform.localScale = Vector3.one * 0.32f;
-                ApplyFallbackColor(worldObject, stack.Item.FallbackColor);
-            }
-
-            if (worldObject.GetComponentInChildren<Collider>() == null)
-            {
-                worldObject.AddComponent<BoxCollider>();
-            }
+            GameObject worldObject = CreateWorldObject(stack, position);
+            EnsureSolidCollider(worldObject);
 
             WorldItemPickup pickup =
                 worldObject.GetComponent<WorldItemPickup>() ??
@@ -122,15 +105,101 @@ namespace ShadowSupply.Inventory
                 stack.Condition
             );
 
-            Rigidbody rigidbody =
-                worldObject.GetComponent<Rigidbody>() ??
-                worldObject.AddComponent<Rigidbody>();
-
-            rigidbody.mass = 0.6f;
-            rigidbody.linearVelocity = velocity;
-            rigidbody.angularVelocity = Random.insideUnitSphere * 2f;
-
+            ConfigureDroppedItemPhysics(worldObject, velocity);
             return pickup;
+        }
+
+        private static GameObject CreateWorldObject(
+            ItemStack stack,
+            Vector3 position
+        )
+        {
+            GameObject worldObject;
+
+            if (stack.Item.DisplayPrefab != null)
+            {
+                worldObject = Instantiate(
+                    stack.Item.DisplayPrefab,
+                    position,
+                    Random.rotation
+                );
+            }
+            else
+            {
+                worldObject = GameObject.CreatePrimitive(
+                    stack.Item.FallbackPrimitive
+                );
+
+                worldObject.transform.position = position;
+                worldObject.transform.rotation = Random.rotation;
+                worldObject.transform.localScale = Vector3.one * 0.32f;
+                ApplyFallbackColor(worldObject, stack.Item.FallbackColor);
+            }
+
+            worldObject.transform.SetParent(null, true);
+            return worldObject;
+        }
+
+        private static void EnsureSolidCollider(GameObject worldObject)
+        {
+            Collider[] colliders =
+                worldObject.GetComponentsInChildren<Collider>(true);
+
+            bool hasEnabledSolidCollider = false;
+
+            foreach (Collider collider in colliders)
+            {
+                if (collider != null && collider.enabled && !collider.isTrigger)
+                {
+                    hasEnabledSolidCollider = true;
+                    break;
+                }
+            }
+
+            if (!hasEnabledSolidCollider)
+            {
+                worldObject.AddComponent<BoxCollider>();
+            }
+        }
+
+        private static void ConfigureDroppedItemPhysics(
+            GameObject worldObject,
+            Vector3 initialVelocity
+        )
+        {
+            Rigidbody rigidbody = worldObject.GetComponent<Rigidbody>();
+
+            if (rigidbody == null)
+            {
+                rigidbody = worldObject.AddComponent<Rigidbody>();
+            }
+
+            rigidbody.mass = DroppedItemMass;
+            rigidbody.useGravity = true;
+            rigidbody.isKinematic = false;
+            rigidbody.detectCollisions = true;
+            rigidbody.constraints = RigidbodyConstraints.None;
+            rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            rigidbody.collisionDetectionMode =
+                CollisionDetectionMode.ContinuousDynamic;
+            rigidbody.linearDamping = DroppedItemLinearDamping;
+            rigidbody.angularDamping = DroppedItemAngularDamping;
+            rigidbody.maxAngularVelocity = MaximumTumbleSpeed * 2f;
+
+            rigidbody.linearVelocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
+            rigidbody.WakeUp();
+
+            rigidbody.AddForce(
+                initialVelocity,
+                ForceMode.VelocityChange
+            );
+
+            rigidbody.AddTorque(
+                Random.onUnitSphere *
+                Random.Range(MinimumTumbleSpeed, MaximumTumbleSpeed),
+                ForceMode.VelocityChange
+            );
         }
 
         private static void ApplyFallbackColor(

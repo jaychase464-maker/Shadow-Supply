@@ -1,0 +1,14 @@
+{
+  "name": "ShadowSupply_v0.2.1_DroppedItemPhysicsHotfix",
+  "version": "v0.2.1-inventory-hotfix",
+  "unity_version": "6000.0.58f2",
+  "extract_to": "Unity project root",
+  "files": [
+    "Assets/_Project/Scripts/Runtime/Inventory/WorldItemPickup.cs",
+    "BUGS.md",
+    "CHANGELOG.md",
+    "CURRENT_STATUS.md",
+    "DISCORD_HOTFIX_v0.2.1.md",
+    "Documentation/HOTFIX_v0.2.1_DROPPED_ITEM_PHYSICS.md"
+  ]
+}

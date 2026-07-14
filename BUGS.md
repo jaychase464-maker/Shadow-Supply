@@ -4,27 +4,37 @@ Use one entry per bug.
 
 ## Active bugs
 
-### BUG-000 — Replace with current issue
+### BUG-004 — Dropped inventory items float instead of falling
 
-- Status: Open
+- Status: Fix prepared; local verification pending
 - Severity: Medium
-- Reported version:
-- Scene:
+- Reported version: `v0.2.0-inventory`
+- Scene: `Assets/_Project/Scenes/Development/Dev_Playground.unity`
 - Affected scripts:
-- Affected prefabs:
+  - `Assets/_Project/Scripts/Runtime/Inventory/WorldItemPickup.cs`
 - Reproduction steps:
-  1.
-  2.
-  3.
+  1. Pick up an item.
+  2. Select its hotbar slot.
+  3. Press `Q` to drop one item.
 - Expected:
+  - The dropped item is released as a dynamic physics object.
+  - Gravity pulls it to the ground.
+  - Initial force and torque make it tumble naturally.
 - Actual:
-- Notes:
+  - The item remains suspended near the drop position.
+- Fix prepared:
+  - Explicitly enable gravity and dynamic Rigidbody state.
+  - Clear inherited Rigidbody constraints.
+  - Enable collision detection and interpolation.
+  - Add a solid collider when a display prefab has none.
+  - Apply initial force and randomized torque.
+  - Wake the Rigidbody immediately after configuration.
 
 ## Previously reported bugs
 
 ### BUG-001 — Wall outlets face the wrong direction
 
-- Status: Previously reported; verify status in current legacy project
+- Status: Historical legacy-project report; not present in the active clean rewrite
 - Area: Electrical placement
 - Likely affected assets:
   - Outlet prefab
@@ -33,7 +43,7 @@ Use one entry per bug.
 
 ### BUG-002 — Electrical connectors do not insert correctly
 
-- Status: Previously reported; verify status in current legacy project
+- Status: Historical legacy-project report; not present in the active clean rewrite
 - Area: Physical plug system
 - Likely affected scripts:
   - `MachinePowerConnection.cs`
@@ -42,7 +52,7 @@ Use one entry per bug.
 
 ### BUG-003 — Entrance door blocked by electrical panels
 
-- Status: Previously reported; verify status in current legacy project
+- Status: Historical legacy-project report; not present in the active clean rewrite
 - Area: Starter property scene layout
 - Likely affected assets:
   - Garage scene

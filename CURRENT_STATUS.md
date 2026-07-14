@@ -4,7 +4,7 @@ Update this file after each meaningful development session.
 
 ## Current version
 
-- Current clean rewrite: `v0.2.0-inventory`
+- Current clean rewrite: `v0.2.1-inventory-hotfix`
 - Repository: `jaychase464-maker/Shadow-Supply`
 - Source-of-truth branch: `main`
 - Legacy v0.10.x work: historical design reference only
@@ -39,6 +39,7 @@ Update this file after each meaningful development session.
 
 ### Milestone 2 — Items and Inventory
 
+- Inventory behavior verified locally
 - Stable item definitions
 - Item categories, quality, and condition
 - Stackable inventory
@@ -47,26 +48,31 @@ Update this file after each meaningful development session.
 - Held-item display
 - Dropping items
 - Development inventory UI
+- Dropped-item physics hotfix awaiting verification
 
 ## Current compilation state
 
-- Awaiting local compilation and Milestone 2 acceptance testing
+- Milestone 2 reported working locally
+- No compilation error was reported
+- `v0.2.1` dropped-item physics hotfix pending local test
 
 ## Current known risks
 
 - Save data has not been implemented yet.
 - The inventory UI is a temporary development interface.
 - Runtime fallback meshes are placeholders until final item models are assigned.
+- Display prefabs will need correctly sized production colliders later.
 - The repository only reflects committed and pushed local changes.
 
 ## Next planned work
 
-1. Validate Milestone 2 locally.
-2. Commit and push generated assets, scene changes, and `.meta` files.
-3. Implement a versioned save architecture.
-4. Serialize inventory using stable item IDs.
-5. Add save-slot metadata and player transform persistence.
-6. Build persistent world-item foundations before placement and electrical systems.
+1. Verify dropped items fall, collide, and tumble correctly.
+2. Commit and push the hotfix.
+3. Mark BUG-004 resolved with the hotfix commit hash.
+4. Implement a versioned save architecture.
+5. Serialize inventory using stable item IDs.
+6. Add save-slot metadata and player transform persistence.
+7. Build persistent world-item foundations before placement and electrical systems.
 
 ## Session log
 
@@ -75,6 +81,9 @@ Update this file after each meaningful development session.
 - Changes:
   - Verified Milestone 1 locally.
   - Added Milestone 2 inventory implementation.
+  - Prepared dropped-item physics hotfix.
 - Tests performed:
   - Milestone 1 passed local playtesting.
-  - Milestone 2 testing pending.
+  - Milestone 2 inventory systems passed local playtesting.
+  - Dropped items were reported floating instead of falling.
+  - Physics hotfix testing pending.
