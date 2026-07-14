@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <ui:VisualElement name="inventory-ui-root" class="inventory-ui-root" picking-mode="Ignore">
+    <ui:VisualElement name="inventory-ui-root" class="inventory-ui-root">
         <ui:VisualElement name="compact-hotbar-shell" class="compact-hotbar-shell" picking-mode="Ignore">
             <ui:Label text="HOTBAR" class="compact-hotbar-title" picking-mode="Ignore" />
             <ui:VisualElement name="compact-hotbar-grid" class="compact-hotbar-grid" picking-mode="Ignore" />

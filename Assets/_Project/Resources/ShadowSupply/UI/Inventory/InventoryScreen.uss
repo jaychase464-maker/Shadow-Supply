@@ -394,7 +394,12 @@
     justify-content: space-between;
 }
 
-.equipment-left-slots,
+.equipment-left-slots {
+    width: 28%;
+    height: 100%;
+    justify-content: space-around;
+}
+
 .equipment-right-slots {
     width: 28%;
     height: 100%;

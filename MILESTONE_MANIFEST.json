@@ -1,11 +1,11 @@
 {
-  "name": "ShadowSupply_v0.3.1_InventoryCursorHotfix",
-  "version": "v0.3.1-inventory-ui-hotfix",
+  "name": "ShadowSupply_v0.3.5_InventoryInspectHotfix",
+  "version": "v0.3.5-inventory-inspect-hotfix",
   "unity_version": "6000.0.58f2",
   "extract_to": "Unity project root",
   "files": [
     "Assets/_Project/Scripts/Runtime/UI/InventoryHUD.cs",
-    "Documentation/INVENTORY_CURSOR_HOTFIX_v0.3.1.md",
-    "DISCORD_INVENTORY_CURSOR_HOTFIX_v0.3.1.md"
+    "Documentation/INVENTORY_INSPECT_HOTFIX_v0.3.5.md",
+    "DISCORD_INVENTORY_INSPECT_HOTFIX_v0.3.5.md"
   ]
 }
