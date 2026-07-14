@@ -26,6 +26,8 @@ namespace ShadowSupply.SaveSystem
             new List<FurnitureDeliverySaveData>();
         public CharacterAppearanceSaveData characterAppearance =
             new CharacterAppearanceSaveData();
+        public ElectricalSystemSaveData electrical =
+            new ElectricalSystemSaveData();
     }
 
     [Serializable]
@@ -107,6 +109,38 @@ namespace ShadowSupply.SaveSystem
     {
         public string persistentId;
         public string placeableId;
+        public Vector3SaveData position =
+            new Vector3SaveData();
+        public QuaternionSaveData rotation =
+            new QuaternionSaveData();
+    }
+
+    [Serializable]
+    public sealed class ElectricalSystemSaveData
+    {
+        public bool mainOn = true;
+        public bool mainTripped;
+        public bool garageLightsOn = true;
+        public List<ElectricalCircuitSaveData> circuits =
+            new List<ElectricalCircuitSaveData>();
+        public List<PowerPlugSaveData> plugs =
+            new List<PowerPlugSaveData>();
+    }
+
+    [Serializable]
+    public sealed class ElectricalCircuitSaveData
+    {
+        public string circuitId;
+        public bool isOn = true;
+        public bool isTripped;
+    }
+
+    [Serializable]
+    public sealed class PowerPlugSaveData
+    {
+        public string persistentId;
+        public string connectedOutletId;
+        public int socketIndex = -1;
         public Vector3SaveData position =
             new Vector3SaveData();
         public QuaternionSaveData rotation =

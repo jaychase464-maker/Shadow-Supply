@@ -2,60 +2,44 @@
 
 ## Current test version
 
-`v0.7.0-modular-starter-garage`
+`v0.8.0-physical-garage-power`
 
-## Completed before this milestone
+## Confirmed before this milestone
 
-- Playable first-person foundation
+- First-person player
 - Inventory and hotbar
 - Save/load foundation
 - Persistent furniture placement
-- Furniture ownership, shop, and physical delivery
-- Rigged modular player-character foundation
+- Furniture ownership and delivery
+- Rigged modular character
+- Modular starter garage
+- Starter furniture and utilities
+- Functional garage doors and lighting
 
-## Current milestone
+## Current unconfirmed milestone
 
-### Milestone 7A — Modular Starter Garage
+### Milestone 8A — Physical Garage Power
 
-Included:
+Added:
 
-- Modular brick garage shell
-- Concrete interior slab
-- Asphalt exterior lot
-- Temporary roof
-- Temporary overhead garage door
-- Entry door
-- Basic door interactions
-- Starter furniture and equipment
-- Interior lights and switch
-- Electrical/security dressing
-- Delivery pad
-- Exterior utility and clutter dressing
+- main and branch circuits
+- breaker interactions
+- individual outlet sockets
+- physical workbench plug
+- cable dragging and visual sag
+- maximum cable reach
+- powered workbench state
+- lighting circuit dependency
+- schema-5 electrical persistence
+- temporary electrical status HUD
 
-## Progression rule
+## Next after confirmation
 
-- Starter garage: basic furniture and equipment included
-- Purchased hideouts: empty and fully player-furnished
+### Milestone 8B — First Production Recipe
 
-## Test gate
-
-Milestone 7A must pass:
-
-1. Layout and scale
-2. Wall, floor, door, and prop collision
-3. Door interactions
-4. Lighting
-5. Default furniture placement
-6. Delivery and supplier positioning
-7. Existing-system regression
-
-## Work after confirmation
-
-- Garage visual corrections and hotfixes
-- Door-state persistence
-- Property-state save data
-- Physical electrical grid
-- Breaker capacity and overload
-- Outlet/socket system
-- Plugging machines into power
-- Final roof and overhead-door asset swaps
+- powered workbench interaction
+- recipe requirements
+- assembly timer
+- material consumption
+- finished product creation
+- packaging foundation

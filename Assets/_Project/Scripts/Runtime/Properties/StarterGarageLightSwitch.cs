@@ -1,3 +1,4 @@
+using ShadowSupply.Electrical;
 using ShadowSupply.Interaction;
 using UnityEngine;
 
@@ -8,11 +9,19 @@ namespace ShadowSupply.Properties
         MonoBehaviour,
         IInteractable
     {
-        [SerializeField] private string switchName = "Garage Lights";
+        [SerializeField] private string switchName =
+            "Garage Lights";
         [SerializeField] private Light[] controlledLights;
         [SerializeField] private bool startsOn = true;
 
+        [Header("Optional electrical circuit")]
+        [SerializeField] private ElectricalPanel powerPanel;
+        [SerializeField] private string circuitId =
+            "garage-lighting";
+
         private bool lightsOn;
+
+        public bool IsOn => lightsOn;
 
         public string InteractionPrompt =>
             lightsOn
@@ -21,7 +30,26 @@ namespace ShadowSupply.Properties
 
         private void Awake()
         {
-            SetLights(startsOn);
+            lightsOn = startsOn;
+            ApplyLights();
+        }
+
+        private void OnEnable()
+        {
+            if (powerPanel != null)
+            {
+                powerPanel.PowerChanged += ApplyLights;
+            }
+
+            ApplyLights();
+        }
+
+        private void OnDisable()
+        {
+            if (powerPanel != null)
+            {
+                powerPanel.PowerChanged -= ApplyLights;
+            }
         }
 
         public void Configure(
@@ -33,12 +61,39 @@ namespace ShadowSupply.Properties
             switchName = displayName;
             controlledLights = lights;
             startsOn = startEnabled;
-            SetLights(startsOn);
+            lightsOn = startEnabled;
+            ApplyLights();
+        }
+
+        public void ConfigurePower(
+            ElectricalPanel panel,
+            string stableCircuitId
+        )
+        {
+            if (powerPanel != null)
+            {
+                powerPanel.PowerChanged -= ApplyLights;
+            }
+
+            powerPanel = panel;
+            circuitId = stableCircuitId;
+
+            if (
+                isActiveAndEnabled &&
+                powerPanel != null
+            )
+            {
+                powerPanel.PowerChanged += ApplyLights;
+            }
+
+            ApplyLights();
         }
 
         public bool CanInteract(GameObject interactor)
         {
-            return enabled && gameObject.activeInHierarchy;
+            return
+                enabled &&
+                gameObject.activeInHierarchy;
         }
 
         public void Interact(GameObject interactor)
@@ -49,17 +104,32 @@ namespace ShadowSupply.Properties
         public void SetLights(bool enabledState)
         {
             lightsOn = enabledState;
+            ApplyLights();
+        }
+
+        private void ApplyLights()
+        {
+            bool circuitPowered =
+                powerPanel == null ||
+                powerPanel.IsCircuitPowered(circuitId);
+
+            bool finalState =
+                lightsOn &&
+                circuitPowered;
 
             if (controlledLights == null)
             {
                 return;
             }
 
-            foreach (Light targetLight in controlledLights)
+            foreach (
+                Light targetLight
+                in controlledLights
+            )
             {
                 if (targetLight != null)
                 {
-                    targetLight.enabled = enabledState;
+                    targetLight.enabled = finalState;
                 }
             }
         }

@@ -1,20 +1,14 @@
 {
-  "name": "ShadowSupply_v0.7.7_SideDoorKeypadUtilityHotfix",
-  "version": "v0.7.7-side-door-keypad-utility-hotfix",
+  "name": "ShadowSupply_v0.8.1_CableFloorClippingHotfix",
+  "version": "v0.8.1-cable-floor-clipping-hotfix",
   "unity_version": "6000.0.58f2",
   "extract_to": "Unity project root",
-  "requires_rerun": "Shadow Supply/Setup/Apply Milestone 7A Modular Starter Garage",
+  "requires_setup_rerun": false,
   "confirmed": false,
   "discord_post_withheld": true,
-  "fixes": [
-    "flip imported electricity meter",
-    "replace broken imported breaker with deterministic panel",
-    "widen side-door masonry opening",
-    "install interior and exterior keypads"
-  ],
   "files": [
-    "Assets/_Project/Scripts/Editor/Milestone7StarterGarageSetup.cs",
+    "Assets/_Project/Scripts/Runtime/Electrical/PowerCableVisual.cs",
     "DISCORD_DRAFT_DO_NOT_POST_UNTIL_CONFIRMED.md",
-    "Documentation/SIDE_DOOR_KEYPAD_UTILITY_HOTFIX_v0.7.7.md"
+    "Documentation/CABLE_FLOOR_CLIPPING_HOTFIX_v0.8.1.md"
   ]
 }

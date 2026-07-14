@@ -5,9 +5,11 @@ using System.IO;
 using ShadowSupply.Character;
 using ShadowSupply.Delivery;
 using ShadowSupply.Economy;
+using ShadowSupply.Electrical;
 using ShadowSupply.Inventory;
 using ShadowSupply.Player;
 using ShadowSupply.Placement;
+using ShadowSupply.Properties;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,9 +18,9 @@ namespace ShadowSupply.SaveSystem
     [DefaultExecutionOrder(-500)]
     public sealed class SaveManager : MonoBehaviour
     {
-        public const int CurrentSaveVersion = 4;
+        public const int CurrentSaveVersion = 5;
         public const string CurrentGameVersion =
-            "v0.6.2-rigged-player-integration";
+            "v0.8.0-physical-garage-power";
 
         public static SaveManager Instance { get; private set; }
 
@@ -407,7 +409,9 @@ namespace ShadowSupply.SaveSystem
                 furnitureDeliveries =
                     CaptureFurnitureDeliveries(),
                 characterAppearance =
-                    CaptureCharacterAppearance()
+                    CaptureCharacterAppearance(),
+                electrical =
+                    CaptureElectricalSystem()
             };
 
             return data;
@@ -739,6 +743,92 @@ namespace ShadowSupply.SaveSystem
                 : partId;
         }
 
+        private ElectricalSystemSaveData
+            CaptureElectricalSystem()
+        {
+            ElectricalSystemSaveData data =
+                new ElectricalSystemSaveData();
+
+            ElectricalPanel panel =
+                FindFirstObjectByType<ElectricalPanel>();
+
+            if (panel != null)
+            {
+                data.mainOn = panel.MainOn;
+                data.mainTripped = panel.MainTripped;
+
+                foreach (
+                    ElectricalCircuit circuit
+                    in panel.Circuits
+                )
+                {
+                    if (circuit == null)
+                    {
+                        continue;
+                    }
+
+                    data.circuits.Add(
+                        new ElectricalCircuitSaveData
+                        {
+                            circuitId =
+                                circuit.CircuitId,
+                            isOn =
+                                circuit.IsOn,
+                            isTripped =
+                                circuit.IsTripped
+                        }
+                    );
+                }
+            }
+
+            StarterGarageLightSwitch lightSwitch =
+                FindFirstObjectByType<
+                    StarterGarageLightSwitch
+                >();
+
+            data.garageLightsOn =
+                lightSwitch == null ||
+                lightSwitch.IsOn;
+
+            PowerPlug[] plugs =
+                FindObjectsByType<PowerPlug>(
+                    FindObjectsInactive.Exclude,
+                    FindObjectsSortMode.None
+                );
+
+            foreach (PowerPlug plug in plugs)
+            {
+                if (plug == null)
+                {
+                    continue;
+                }
+
+                plug.EnsurePersistentId();
+
+                data.plugs.Add(
+                    new PowerPlugSaveData
+                    {
+                        persistentId =
+                            plug.PersistentId,
+                        connectedOutletId =
+                            plug.ConnectedOutletId,
+                        socketIndex =
+                            plug.ConnectedSocketIndex,
+                        position =
+                            new Vector3SaveData(
+                                plug.transform.position
+                            ),
+                        rotation =
+                            new QuaternionSaveData(
+                                plug.transform.rotation
+                            )
+                    }
+                );
+            }
+
+            return data;
+        }
+
         private void ApplySaveData(SaveGameData data)
         {
             ResolveSceneReferences();
@@ -760,6 +850,7 @@ namespace ShadowSupply.SaveSystem
             RestoreWallet(data.wallet);
             RestoreFurnitureDeliveries(data.furnitureDeliveries);
             RestoreCharacterAppearance(data.characterAppearance);
+            RestoreElectricalSystem(data.electrical);
 
             if (hotbarController != null)
             {
@@ -1090,6 +1181,182 @@ namespace ShadowSupply.SaveSystem
             }
         }
 
+        private void RestoreElectricalSystem(
+            ElectricalSystemSaveData data
+        )
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            ElectricalPanel panel =
+                FindFirstObjectByType<ElectricalPanel>();
+
+            if (panel != null)
+            {
+                panel.RestoreMainState(
+                    data.mainOn,
+                    data.mainTripped
+                );
+
+                if (data.circuits != null)
+                {
+                    foreach (
+                        ElectricalCircuitSaveData circuitData
+                        in data.circuits
+                    )
+                    {
+                        if (
+                            circuitData == null ||
+                            string.IsNullOrWhiteSpace(
+                                circuitData.circuitId
+                            )
+                        )
+                        {
+                            continue;
+                        }
+
+                        panel.RestoreCircuitState(
+                            circuitData.circuitId,
+                            circuitData.isOn,
+                            circuitData.isTripped
+                        );
+                    }
+                }
+            }
+
+            PowerPlug[] currentPlugs =
+                FindObjectsByType<PowerPlug>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            Dictionary<string, PowerPlug> plugsById =
+                new Dictionary<string, PowerPlug>();
+
+            foreach (PowerPlug plug in currentPlugs)
+            {
+                if (plug == null)
+                {
+                    continue;
+                }
+
+                plug.EnsurePersistentId();
+
+                plug.RestoreFreePose(
+                    plug.transform.position,
+                    plug.transform.rotation
+                );
+
+                plugsById[plug.PersistentId] = plug;
+            }
+
+            PowerOutlet[] currentOutlets =
+                FindObjectsByType<PowerOutlet>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            Dictionary<string, PowerOutlet> outletsById =
+                new Dictionary<string, PowerOutlet>();
+
+            foreach (PowerOutlet outlet in currentOutlets)
+            {
+                if (
+                    outlet != null &&
+                    !string.IsNullOrWhiteSpace(
+                        outlet.OutletId
+                    )
+                )
+                {
+                    outletsById[outlet.OutletId] =
+                        outlet;
+                }
+            }
+
+            if (data.plugs != null)
+            {
+                foreach (
+                    PowerPlugSaveData plugData
+                    in data.plugs
+                )
+                {
+                    if (
+                        plugData == null ||
+                        string.IsNullOrWhiteSpace(
+                            plugData.persistentId
+                        ) ||
+                        !plugsById.TryGetValue(
+                            plugData.persistentId,
+                            out PowerPlug plug
+                        )
+                    )
+                    {
+                        continue;
+                    }
+
+                    Vector3 restoredPosition =
+                        plugData.position != null
+                            ? plugData.position.ToVector3()
+                            : plug.transform.position;
+
+                    Quaternion restoredRotation =
+                        plugData.rotation != null
+                            ? plugData.rotation.ToQuaternion()
+                            : plug.transform.rotation;
+
+                    plug.RestoreFreePose(
+                        restoredPosition,
+                        restoredRotation
+                    );
+
+                    if (
+                        string.IsNullOrWhiteSpace(
+                            plugData.connectedOutletId
+                        ) ||
+                        plugData.socketIndex < 0 ||
+                        !outletsById.TryGetValue(
+                            plugData.connectedOutletId,
+                            out PowerOutlet outlet
+                        )
+                    )
+                    {
+                        continue;
+                    }
+
+                    OutletSocket socket =
+                        outlet.GetSocket(
+                            plugData.socketIndex
+                        );
+
+                    if (socket != null)
+                    {
+                        plug.ConnectTo(
+                            socket,
+                            true
+                        );
+                    }
+                }
+            }
+
+            StarterGarageLightSwitch lightSwitch =
+                FindFirstObjectByType<
+                    StarterGarageLightSwitch
+                >();
+
+            lightSwitch?.SetLights(
+                data.garageLightsOn
+            );
+
+            ElectricalGridSystem grid =
+                FindFirstObjectByType<
+                    ElectricalGridSystem
+                >();
+
+            grid?.ForceRecalculate();
+        }
+
         private static void MigrateSaveData(
             SaveGameData data
         )
@@ -1126,6 +1393,15 @@ namespace ShadowSupply.SaveSystem
             data.characterAppearance ??=
                 new CharacterAppearanceSaveData();
 
+            data.electrical ??=
+                new ElectricalSystemSaveData();
+
+            data.electrical.circuits ??=
+                new List<ElectricalCircuitSaveData>();
+
+            data.electrical.plugs ??=
+                new List<PowerPlugSaveData>();
+
             if (data.saveVersion < 3)
             {
                 if (data.wallet.cleanCash <= 0)
@@ -1140,7 +1416,13 @@ namespace ShadowSupply.SaveSystem
                     new CharacterAppearanceSaveData();
             }
 
-            data.saveVersion = 4;
+            if (data.saveVersion < 5)
+            {
+                data.electrical =
+                    new ElectricalSystemSaveData();
+            }
+
+            data.saveVersion = 5;
         }
 
         private void RestoreWallet(
