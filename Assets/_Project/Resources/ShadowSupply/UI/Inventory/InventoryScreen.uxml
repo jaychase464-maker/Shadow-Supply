@@ -1,0 +1,198 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="inventory-ui-root" class="inventory-ui-root" picking-mode="Ignore">
+        <ui:VisualElement name="compact-hotbar-shell" class="compact-hotbar-shell" picking-mode="Ignore">
+            <ui:Label text="HOTBAR" class="compact-hotbar-title" picking-mode="Ignore" />
+            <ui:VisualElement name="compact-hotbar-grid" class="compact-hotbar-grid" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="inventory-screen" class="inventory-screen">
+            <ui:VisualElement class="inventory-backdrop" picking-mode="Ignore" />
+
+            <ui:VisualElement class="inventory-frame">
+                <ui:VisualElement class="inventory-header">
+                    <ui:VisualElement class="inventory-title-group">
+                        <ui:Label text="///" class="inventory-chevron" />
+                        <ui:Label text="INVENTORY" class="inventory-title" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="inventory-stats">
+                        <ui:VisualElement class="header-stat">
+                            <ui:Label text="$" class="header-stat-icon cash-icon" />
+                            <ui:VisualElement class="header-stat-copy">
+                                <ui:Label text="CASH" class="header-stat-label" />
+                                <ui:Label name="cash-value" text="$0" class="header-stat-value" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+
+                        <ui:VisualElement class="header-stat">
+                            <ui:Label text="$" class="header-stat-icon dirty-cash-icon" />
+                            <ui:VisualElement class="header-stat-copy">
+                                <ui:Label text="DIRTY CASH" class="header-stat-label" />
+                                <ui:Label name="dirty-cash-value" text="$0" class="header-stat-value" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+
+                        <ui:VisualElement class="header-stat">
+                            <ui:Label text="!" class="header-stat-icon heat-icon" />
+                            <ui:VisualElement class="header-stat-copy">
+                                <ui:Label text="HEAT" class="header-stat-label" />
+                                <ui:Label name="heat-value" text="0%" class="header-stat-value heat-value" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+
+                        <ui:VisualElement class="header-stat">
+                            <ui:Label text="W" class="header-stat-icon weight-icon" />
+                            <ui:VisualElement class="header-stat-copy">
+                                <ui:Label text="WEIGHT" class="header-stat-label" />
+                                <ui:Label name="weight-value" text="0 / 60" class="header-stat-value weight-value" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="inventory-main">
+                    <ui:VisualElement class="inventory-left-column">
+                        <ui:VisualElement class="industrial-panel inventory-grid-panel">
+                            <ui:VisualElement class="panel-header-row">
+                                <ui:Label text="INVENTORY" class="panel-title" />
+                                <ui:Label name="inventory-count" text="0 / 24" class="panel-count" />
+                            </ui:VisualElement>
+                            <ui:VisualElement name="inventory-grid" class="inventory-grid" />
+                        </ui:VisualElement>
+
+                        <ui:VisualElement class="industrial-panel inventory-hotbar-panel">
+                            <ui:Label text="HOTBAR" class="panel-title" />
+                            <ui:VisualElement name="inventory-hotbar-grid" class="inventory-hotbar-grid" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="inventory-right-column">
+                        <ui:VisualElement class="industrial-panel equipment-panel">
+                            <ui:VisualElement class="equipment-left-slots">
+                                <ui:VisualElement class="equipment-slot-group">
+                                    <ui:Label text="HANDS" class="equipment-label" />
+                                    <ui:VisualElement class="equipment-slot">
+                                        <ui:Label text="H" class="equipment-glyph" />
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                                <ui:VisualElement class="equipment-slot-group">
+                                    <ui:Label text="TOOL" class="equipment-label" />
+                                    <ui:VisualElement class="equipment-slot">
+                                        <ui:Label text="T" class="equipment-glyph" />
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:VisualElement class="paper-doll">
+                                <ui:VisualElement class="doll-head" />
+                                <ui:VisualElement class="doll-body" />
+                                <ui:VisualElement class="doll-arm doll-arm-left" />
+                                <ui:VisualElement class="doll-arm doll-arm-right" />
+                                <ui:VisualElement class="doll-leg doll-leg-left" />
+                                <ui:VisualElement class="doll-leg doll-leg-right" />
+                            </ui:VisualElement>
+
+                            <ui:VisualElement class="equipment-right-slots">
+                                <ui:VisualElement class="equipment-slot-group">
+                                    <ui:Label text="BACK" class="equipment-label" />
+                                    <ui:VisualElement class="equipment-slot">
+                                        <ui:Label text="B" class="equipment-glyph" />
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                                <ui:VisualElement class="equipment-slot-group">
+                                    <ui:Label text="KEY ITEM" class="equipment-label" />
+                                    <ui:VisualElement class="equipment-slot">
+                                        <ui:Label text="K" class="equipment-glyph" />
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+
+                        <ui:VisualElement class="industrial-panel details-panel">
+                            <ui:VisualElement class="details-title-row">
+                                <ui:VisualElement class="details-title-copy">
+                                    <ui:Label name="details-name" text="EMPTY SLOT" class="details-name" />
+                                    <ui:Label name="details-category" text="No Item" class="details-category" />
+                                </ui:VisualElement>
+                                <ui:Label name="details-quantity" text="" class="details-quantity" />
+                            </ui:VisualElement>
+
+                            <ui:VisualElement class="details-content-row">
+                                <ui:VisualElement name="details-icon" class="details-icon" />
+
+                                <ui:VisualElement class="details-stat-column">
+                                    <ui:VisualElement class="details-stat-row">
+                                        <ui:Label text="QUALITY" class="details-stat-label" />
+                                        <ui:Label name="details-quality" text="—" class="details-stat-value quality-value" />
+                                    </ui:VisualElement>
+
+                                    <ui:VisualElement class="details-stat-row condition-stat-row">
+                                        <ui:VisualElement class="details-stat-topline">
+                                            <ui:Label text="CONDITION" class="details-stat-label" />
+                                            <ui:Label name="details-condition" text="—" class="details-stat-value" />
+                                        </ui:VisualElement>
+                                        <ui:VisualElement class="condition-bar">
+                                            <ui:VisualElement name="details-condition-fill" class="condition-fill" />
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+
+                                    <ui:VisualElement class="details-stat-row">
+                                        <ui:Label text="VALUE" class="details-stat-label" />
+                                        <ui:Label name="details-value" text="—" class="details-stat-value" />
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:Label name="details-description" text="Select a filled inventory slot to inspect its contents." class="details-description" />
+                            <ui:Label name="details-action-message" text="" class="details-action-message" />
+
+                            <ui:VisualElement class="details-action-row">
+                                <ui:Button name="details-use-button" text="USE" class="details-action-button primary-action" />
+                                <ui:Button name="details-drop-button" text="DROP" class="details-action-button" />
+                                <ui:Button name="details-split-button" text="SPLIT" class="details-action-button" />
+                                <ui:Button name="details-inspect-button" text="INSPECT" class="details-action-button" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="inventory-footer">
+                    <ui:VisualElement class="footer-hint">
+                        <ui:Label text="TAB" class="footer-key" />
+                        <ui:Label text="CLOSE" class="footer-copy" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="footer-hint">
+                        <ui:Label text="E" class="footer-key" />
+                        <ui:Label text="USE" class="footer-copy" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="footer-hint">
+                        <ui:Label text="Q" class="footer-key" />
+                        <ui:Label text="DROP" class="footer-copy" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="footer-hint">
+                        <ui:Label text="R" class="footer-key" />
+                        <ui:Label text="SPLIT" class="footer-copy" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="footer-hint footer-hint-wide">
+                        <ui:Label text="MOUSE WHEEL" class="footer-key" />
+                        <ui:Label text="HOTBAR" class="footer-copy" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="inspect-modal" class="inspect-modal">
+            <ui:VisualElement class="inspect-card">
+                <ui:VisualElement class="inspect-card-header">
+                    <ui:Label text="ITEM INSPECTION" class="inspect-kicker" />
+                    <ui:Button name="inspect-close-button" text="X" class="inspect-close-button" />
+                </ui:VisualElement>
+                <ui:VisualElement name="inspect-icon" class="inspect-icon" />
+                <ui:Label name="inspect-name" text="ITEM" class="inspect-name" />
+                <ui:Label name="inspect-category" text="Category" class="inspect-category" />
+                <ui:Label name="inspect-description" text="" class="inspect-description" />
+                <ui:Label name="inspect-metadata" text="" class="inspect-metadata" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

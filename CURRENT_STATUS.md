@@ -4,7 +4,7 @@ Update this file after each meaningful development session.
 
 ## Current version
 
-- Current clean rewrite: `v0.3.0-save-foundation`
+- Current clean rewrite: `v0.3.1-inventory-ui`
 - Repository: `jaychase464-maker/Shadow-Supply`
 - Source-of-truth branch: `main`
 - Save schema version: `1`
@@ -46,7 +46,6 @@ Update this file after each meaningful development session.
 - World pickups
 - Held-item display
 - Dropping items
-- Development inventory UI
 - Dropped-item physics hotfix committed
 
 ## Current milestone
@@ -61,44 +60,57 @@ Update this file after each meaningful development session.
 - World-pickup persistence
 - Dropped-item physics-state persistence
 - Save-slot metadata
-- Development save HUD
+- Local acceptance testing pending
+
+## Current UI pass
+
+### v0.3.1 — Inventory UI Redesign
+
+- UI Toolkit runtime inventory
+- Industrial UXML and USS presentation
+- Twenty-four inventory slots
+- Eight-slot in-menu hotbar
+- Compact gameplay hotbar
+- Item detail card
+- Equipment display
+- Use, Drop, Split, and Inspect actions
+- Item icon resource support
+- Save schema unchanged
 
 ## Current compilation state
 
 - Milestone 1 and Milestone 2 reported working
-- No compilation errors were reported before Milestone 3
-- Milestone 3 package revision 2 prepared after resolving `CS0104`
-- Local compilation and acceptance testing pending
+- Milestone 3 package revision 2 resolved the reported `CS0104`
+- Inventory UI redesign awaiting local compilation and playtesting
 
 ## Current known risks
 
+- Cash, dirty cash, and heat are temporary presentation values.
+- Weight currently uses item quantity rather than true item mass.
 - Save schema migrations have not yet been needed.
-- The save and inventory interfaces are temporary development interfaces.
-- Runtime fallback meshes are placeholders.
+- Runtime fallback meshes remain placeholders.
 - Production item prefabs will need correctly sized colliders.
 - The repository only reflects committed and pushed local changes.
 
 ## Next planned work
 
-1. Validate all three save slots.
-2. Verify player, inventory, hotbar, and world-item restoration.
-3. Commit and push Milestone 3.
+1. Validate Milestone 3 save and load.
+2. Validate the redesigned inventory interface.
+3. Commit and push the combined update.
 4. Begin persistent furniture placement.
 5. Integrate placed objects into save schema version `1` without changing existing fields.
 6. Build floor placement before wall placement and electrical objects.
 
 ## Session log
 
-### 2026-07-13
+### 2026-07-14
 
 - Changes:
-  - Verified Milestone 1.
-  - Added and verified Milestone 2 inventory behavior.
-  - Committed the dropped-item physics hotfix.
-  - Prepared Milestone 3 save and load foundation.
-  - Corrected ambiguous `Random` reference in `WorldItemPickup.cs`.
+  - Added production-style inventory UI.
+  - Added compact gameplay hotbar.
+  - Added item detail and inspection panels.
+  - Added stack splitting and inventory-to-hotbar swapping.
+  - Preserved save schema version `1`.
 - Tests performed:
-  - Milestone 1 passed local playtesting.
-  - Milestone 2 inventory systems passed local playtesting.
-  - Initial Milestone 3 package reported `CS0104` in `WorldItemPickup.cs`.
-  - Corrected package testing pending.
+  - Local Unity compilation pending.
+  - Inventory UI acceptance testing pending.

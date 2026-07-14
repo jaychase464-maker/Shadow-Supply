@@ -150,6 +150,108 @@ namespace ShadowSupply.Inventory
             return false;
         }
 
+        public bool HasEmptySlot()
+        {
+            InitializeSlots();
+
+            foreach (InventorySlot slot in slots)
+            {
+                if (slot.IsEmpty)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public int GetTotalQuantity()
+        {
+            InitializeSlots();
+            int total = 0;
+
+            foreach (InventorySlot slot in slots)
+            {
+                if (!slot.IsEmpty)
+                {
+                    total += slot.Stack.Quantity;
+                }
+            }
+
+            return total;
+        }
+
+        public bool SwapSlots(int firstIndex, int secondIndex)
+        {
+            InitializeSlots();
+
+            if (
+                firstIndex < 0 ||
+                firstIndex >= slots.Count ||
+                secondIndex < 0 ||
+                secondIndex >= slots.Count
+            )
+            {
+                return false;
+            }
+
+            if (firstIndex == secondIndex)
+            {
+                return true;
+            }
+
+            ItemStack first =
+                slots[firstIndex].IsEmpty
+                    ? null
+                    : slots[firstIndex].Stack.Clone();
+
+            ItemStack second =
+                slots[secondIndex].IsEmpty
+                    ? null
+                    : slots[secondIndex].Stack.Clone();
+
+            slots[firstIndex].Set(second);
+            slots[secondIndex].Set(first);
+
+            Changed?.Invoke();
+            return true;
+        }
+
+        public int SplitStack(int sourceIndex)
+        {
+            InitializeSlots();
+
+            InventorySlot source = GetSlot(sourceIndex);
+
+            if (
+                source == null ||
+                source.IsEmpty ||
+                source.Stack.Quantity < 2
+            )
+            {
+                return -1;
+            }
+
+            int emptyIndex = FindFirstEmptySlot();
+
+            if (emptyIndex < 0)
+            {
+                return -1;
+            }
+
+            int amountToMove =
+                source.Stack.Quantity / 2;
+
+            ItemStack splitStack =
+                source.Stack.Clone(amountToMove);
+
+            source.Stack.Remove(amountToMove);
+            slots[emptyIndex].Set(splitStack);
+
+            Changed?.Invoke();
+            return emptyIndex;
+        }
+
         public void RestoreSlots(
             IReadOnlyList<ItemStack> restoredStacks
         )
@@ -187,6 +289,19 @@ namespace ShadowSupply.Inventory
             }
 
             Changed?.Invoke();
+        }
+
+        private int FindFirstEmptySlot()
+        {
+            for (int i = 0; i < slots.Count; i++)
+            {
+                if (slots[i].IsEmpty)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         private void InitializeSlots()

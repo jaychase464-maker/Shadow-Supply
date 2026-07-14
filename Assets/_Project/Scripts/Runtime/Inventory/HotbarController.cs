@@ -15,32 +15,32 @@ namespace ShadowSupply.Inventory
         public event Action<int> SelectionChanged;
 
         public int SelectedIndex { get; private set; }
+
         public InventorySlot SelectedSlot =>
-            inventory != null ? inventory.GetSlot(SelectedIndex) : null;
+            inventory != null
+                ? inventory.GetSlot(SelectedIndex)
+                : null;
 
         private void Awake()
         {
-            inventory ??= GetComponent<PlayerInventory>();
-            heldItemDisplay ??= GetComponent<HeldItemDisplay>();
-
-            if (dropOrigin == null)
-            {
-                Camera camera = GetComponentInChildren<Camera>(true);
-                dropOrigin = camera != null ? camera.transform : transform;
-            }
+            ResolveReferences();
         }
 
         private void OnEnable()
         {
+            ResolveReferences();
+
             if (inventory != null)
             {
                 inventory.Changed += HandleInventoryChanged;
             }
+
+            RefreshHeldItem();
         }
 
         private void Start()
         {
-            Select(0);
+            Select(SelectedIndex);
         }
 
         private void OnDisable()
@@ -84,23 +84,86 @@ namespace ShadowSupply.Inventory
             SelectionChanged?.Invoke(SelectedIndex);
         }
 
-        public void DropOneSelectedItem()
+        public bool EquipFromInventorySlot(int inventoryIndex)
         {
             if (
                 inventory == null ||
-                SelectedSlot == null ||
-                SelectedSlot.IsEmpty ||
+                inventoryIndex < 0 ||
+                inventoryIndex >= inventory.SlotCount
+            )
+            {
+                return false;
+            }
+
+            InventorySlot source =
+                inventory.GetSlot(inventoryIndex);
+
+            if (source == null || source.IsEmpty)
+            {
+                return false;
+            }
+
+            if (inventoryIndex < inventory.HotbarSize)
+            {
+                Select(inventoryIndex);
+                return true;
+            }
+
+            int destinationIndex = SelectedIndex;
+
+            if (
+                destinationIndex < 0 ||
+                destinationIndex >= inventory.HotbarSize
+            )
+            {
+                destinationIndex = 0;
+            }
+
+            if (
+                !inventory.SwapSlots(
+                    inventoryIndex,
+                    destinationIndex
+                )
+            )
+            {
+                return false;
+            }
+
+            Select(destinationIndex);
+            return true;
+        }
+
+        public void DropOneSelectedItem()
+        {
+            DropOneFromSlot(SelectedIndex);
+        }
+
+        public bool DropOneFromSlot(int slotIndex)
+        {
+            ResolveReferences();
+
+            if (
+                inventory == null ||
                 dropOrigin == null
             )
             {
-                return;
+                return false;
             }
 
-            ItemStack removed = inventory.RemoveFromSlot(SelectedIndex, 1);
+            InventorySlot slot =
+                inventory.GetSlot(slotIndex);
+
+            if (slot == null || slot.IsEmpty)
+            {
+                return false;
+            }
+
+            ItemStack removed =
+                inventory.RemoveFromSlot(slotIndex, 1);
 
             if (removed == null || removed.IsEmpty)
             {
-                return;
+                return false;
             }
 
             Vector3 position =
@@ -112,7 +175,27 @@ namespace ShadowSupply.Inventory
                 dropOrigin.forward * dropForwardSpeed +
                 Vector3.up * dropUpwardSpeed;
 
-            WorldItemPickup.Spawn(removed, position, velocity);
+            WorldItemPickup pickup =
+                WorldItemPickup.Spawn(
+                    removed,
+                    position,
+                    velocity
+                );
+
+            if (pickup == null)
+            {
+                inventory.AddItem(
+                    removed.Item,
+                    removed.Quantity,
+                    removed.Quality,
+                    removed.Condition
+                );
+
+                return false;
+            }
+
+            RefreshHeldItem();
+            return true;
         }
 
         private void HandleNumberSelection()
@@ -162,7 +245,29 @@ namespace ShadowSupply.Inventory
 
         private void RefreshHeldItem()
         {
-            heldItemDisplay?.Refresh(SelectedSlot?.Stack);
+            heldItemDisplay?.Refresh(
+                SelectedSlot?.Stack
+            );
+        }
+
+        private void ResolveReferences()
+        {
+            inventory ??=
+                GetComponent<PlayerInventory>();
+
+            heldItemDisplay ??=
+                GetComponent<HeldItemDisplay>();
+
+            if (dropOrigin == null)
+            {
+                Camera camera =
+                    GetComponentInChildren<Camera>(true);
+
+                dropOrigin =
+                    camera != null
+                        ? camera.transform
+                        : transform;
+            }
         }
     }
 }

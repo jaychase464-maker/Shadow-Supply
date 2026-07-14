@@ -6,6 +6,26 @@ All meaningful project changes should be recorded here.
 
 ### Added
 
+#### v0.3.1 — Inventory UI Redesign
+
+- Full runtime UI Toolkit inventory
+- Industrial UXML layout and USS styling
+- Twenty-four dynamic inventory slots
+- Eight-slot in-menu hotbar
+- Compact gameplay hotbar
+- Selected and equipped slot states
+- Item detail panel
+- Equipment paper-doll presentation
+- Cash, dirty cash, heat, and temporary weight presentation
+- Item icon resource pipeline
+- Development item icon artwork
+- Functional Use, Drop, Split, and Inspect actions
+- Large item inspection modal
+- Inventory-to-hotbar swapping
+- Stack splitting into empty slots
+- Inventory keyboard and mouse-wheel controls
+- One-click inventory UI setup tool
+
 #### Milestone 3 — Save and Load Foundation
 
 - Save schema version `1`
@@ -26,63 +46,21 @@ All meaningful project changes should be recorded here.
 - Development save HUD
 - One-click Milestone 3 setup tool
 
-#### Milestone 2 — Items and Inventory
+### Changed
 
-- Stable serialized item IDs
-- Item categories
-- Item quality tiers
-- Item condition values
-- Stackable inventory slots
-- Twenty-four-slot player inventory
-- Eight-slot hotbar
-- World item pickups
-- Partial pickup handling
-- Held-item visual display
-- Hotbar selection with number keys and mouse wheel
-- Item dropping and repickup
-- Temporary inventory and hotbar HUD
-- Four development item definitions
-- One-click Milestone 2 playground updater
-- Milestone 2 setup and acceptance documentation
-
-#### Milestone 1 — Playable Foundation
-
-- Runtime and Editor assembly definitions
-- Persistent game bootstrap
-- First-person walking, sprinting, jumping, crouching, and looking
-- Cursor lock and unlock support
-- Interaction raycast and `IInteractable` contract
-- Temporary interaction prompt HUD
-- Test interactable
-- One-click development playground generator
-- Milestone 1 setup and acceptance documentation
+- Active project version advanced to `v0.3.1-inventory-ui`.
+- The temporary `OnGUI` inventory has been replaced.
+- Inventory slots now support safe swapping and splitting.
+- Hotbar dropping can target any inventory slot through the UI.
+- Save schema remains version `1`.
 
 ### Fixed
 
-#### Milestone 3 Package Revision 2
-
 - Resolved `CS0104` in `WorldItemPickup.cs` by explicitly using `UnityEngine.Random.rotation`.
-- The save-system package now compiles without conflicting with `System.Random`.
-
-#### v0.2.1 — Dropped Item Physics Hotfix
-
-- Dropped inventory items explicitly use gravity.
-- Dropped Rigidbody components are forced into a dynamic state.
-- Inherited Rigidbody constraints are cleared.
-- Continuous dynamic collision detection and interpolation are enabled.
-- Dropped items receive randomized torque.
-- A solid fallback collider is added when needed.
-
-### Changed
-
-- Active project version advanced to `v0.3.0-save-foundation`.
-- World pickups now carry persistent runtime IDs.
-- Player inventory exposes a controlled full-restore operation.
-- First-person view yaw and pitch can be restored by the save system.
+- Dropped inventory items use dynamic physics and gravity.
 
 ### Verified
 
 - Milestone 1 playable foundation works locally.
-- Milestone 2 inventory, hotbar, pickup, held-item, and drop controls work locally.
-- Dropped-item physics hotfix is committed.
-- Milestone 3 is awaiting local acceptance testing.
+- Milestone 2 inventory behavior works locally.
+- Milestone 3 and the inventory redesign await local acceptance testing.
