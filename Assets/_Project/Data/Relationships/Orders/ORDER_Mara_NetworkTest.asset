@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: ORDER_Mara_NetworkTest
   m_EditorClassIdentifier: 
   orderId: order-mara-network-test
-  displayName: Network Test
-  description: Mara is considering putting your name in front of another contact.
-    She wants three reliable packages first.
-  requestedItem: {fileID: 11400000, guid: 5ccecdff74df46b4a82e72417b386201, type: 2}
+  displayName: District Sample Run
+  description: Mara wants three bundles before she risks putting the player's name
+    deeper into her network.
+  requestedItem: {fileID: 11400000, guid: 8221cbebf5229f3428ed357eee4670da, type: 2}
   quantity: 3
-  minimumQuality: 1
+  minimumQuality: 2
   deadlineSeconds: 900
-  baseDirtyCashReward: 900
-  qualityBonusPerTier: 50
+  baseDirtyCashReward: 1250
+  qualityBonusPerTier: 70
   minimumSuccessfulOrders: 2
   minimumRapport: -100
   minimumTrust: 16

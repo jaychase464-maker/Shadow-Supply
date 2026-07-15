@@ -1,14 +1,12 @@
 {
-  "name": "ShadowSupply_v0.2.1_DroppedItemPhysicsHotfix",
-  "version": "v0.2.1-inventory-hotfix",
-  "unity_version": "6000.0.58f2",
-  "extract_to": "Unity project root",
-  "files": [
-    "Assets/_Project/Scripts/Runtime/Inventory/WorldItemPickup.cs",
-    "BUGS.md",
-    "CHANGELOG.md",
-    "CURRENT_STATUS.md",
-    "DISCORD_HOTFIX_v0.2.1.md",
-    "Documentation/HOTFIX_v0.2.1_DROPPED_ITEM_PHYSICS.md"
+  "name": "ShadowSupply_v0.9.3.1_Unity6ModelImporterCompileHotfix",
+  "version": "v0.9.3.1-unity6-model-importer-compile-hotfix",
+  "prerequisite": "v0.9.3 Counterfeit Visual Integration extracted",
+  "setup_rerun_required": false,
+  "visual_integration_setup_run_after_compile": true,
+  "confirmed": false,
+  "discord_post_withheld": true,
+  "changed_files": [
+    "Assets/_Project/Scripts/Editor/Milestone9AVisualIntegrationSetup.cs"
   ]
 }

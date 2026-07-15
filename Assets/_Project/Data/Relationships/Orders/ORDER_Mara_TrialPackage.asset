@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: ORDER_Mara_TrialPackage
   m_EditorClassIdentifier: 
   orderId: order-mara-trial-package
-  displayName: Trial Package
-  description: Mara wants one clean package as proof that your garage can produce
-    something worth buying.
-  requestedItem: {fileID: 11400000, guid: 5ccecdff74df46b4a82e72417b386201, type: 2}
+  displayName: First Replica Run
+  description: Mara wants one sealed replica-note bundle to judge whether the player
+    can print clean work.
+  requestedItem: {fileID: 11400000, guid: 8221cbebf5229f3428ed357eee4670da, type: 2}
   quantity: 1
   minimumQuality: 1
   deadlineSeconds: 600
-  baseDirtyCashReward: 240
-  qualityBonusPerTier: 35
+  baseDirtyCashReward: 320
+  qualityBonusPerTier: 45
   minimumSuccessfulOrders: 0
   minimumRapport: -100
   minimumTrust: -100

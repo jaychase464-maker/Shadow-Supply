@@ -37,6 +37,12 @@ namespace ShadowSupply.SaveSystem
         public List<SupplierRelationshipSaveData>
             supplierRelationships =
                 new List<SupplierRelationshipSaveData>();
+        public List<CounterfeitPressSaveData>
+            counterfeitPresses =
+                new List<CounterfeitPressSaveData>();
+        public List<IndustryReputationSaveData>
+            industryReputations =
+                new List<IndustryReputationSaveData>();
     }
 
     [Serializable]
@@ -219,6 +225,29 @@ namespace ShadowSupply.SaveSystem
     {
         public string stockId;
         public int currentStock;
+    }
+
+    [Serializable]
+    public sealed class CounterfeitPressSaveData
+    {
+        public string stationId;
+        public bool processActive;
+        public int currentStep;
+        public int mistakeCount;
+        public float printProgress;
+        public float activeBaseQualityScore;
+        public float activeBaseCondition = 1f;
+        public string pendingOutputItemId;
+        public int pendingOutputQuantity;
+        public int pendingOutputQuality;
+        public float pendingOutputCondition = 1f;
+    }
+
+    [Serializable]
+    public sealed class IndustryReputationSaveData
+    {
+        public string industryId;
+        public int reputation;
     }
 
     [Serializable]

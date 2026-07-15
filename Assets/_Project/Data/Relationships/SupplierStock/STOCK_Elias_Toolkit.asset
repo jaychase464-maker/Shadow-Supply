@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stockId: elias-stock-toolkit
   displayName: Basic Toolkit
-  description: A complete reusable toolkit. Reserved for established repeat customers.
+  description: A reusable cutting and calibration kit reserved for repeat customers.
   item: {fileID: 11400000, guid: 6f64552f79f008b41bc973e1510d24e4, type: 2}
   maximumStock: 1
   baseUnitPrice: 180
-  minimumSuccessfulPurchases: 4
+  minimumSuccessfulPurchases: 3
   minimumRapport: -100
-  minimumTrust: 11
-  minimumRespect: 5
+  minimumTrust: 8
+  minimumRespect: 4

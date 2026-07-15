@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ced89c098f9764ab27df9eb684a624, type: 3}
+  m_Name: ITEM_PigmentCapsule
+  m_EditorClassIdentifier: 
+  itemId: counterfeit-pigment-capsule
+  displayName: Pigment Capsule
+  description: A sealed fictional pigment capsule used by the imprint press.
+  category: 1
+  maximumStack: 10
+  baseValue: 28
+  displayPrefab: {fileID: 6801733174459010200, guid: 517998dee351f6345b1162f7d0e4a327, type: 3}
+  fallbackPrimitive: 2
+  fallbackColor: {r: 0.13, g: 0.12, b: 0.11, a: 1}
+  heldLocalPosition: {x: 0.43, y: -0.34, z: 0.72}
+  heldLocalEulerAngles: {x: 78, y: 0, z: 0}
+  heldLocalScale: {x: 1, y: 1, z: 1}

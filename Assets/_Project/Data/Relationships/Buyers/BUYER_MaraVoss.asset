@@ -16,8 +16,8 @@ MonoBehaviour:
   displayName: Mara Voss
   districtId: blackwater-south
   districtName: Blackwater South
-  biography: A cautious neighborhood buyer who values reliable work, quiet handoffs,
-    and people who keep their word.
+  biography: A cautious neighborhood buyer who values quiet handoffs, reliable timing,
+    and clean replica work.
   initialRapport: 0
   initialTrust: 0
   initialRespect: 0
@@ -28,6 +28,6 @@ MonoBehaviour:
   repeatOrderCooldown: 25
   referralId: contact-print-supply-broker
   referralDisplayName: Print-Supply Broker
-  referralSuccessfulOrders: 3
-  referralTrust: 24
-  referralRespect: 18
+  referralSuccessfulOrders: 1
+  referralTrust: 8
+  referralRespect: 6

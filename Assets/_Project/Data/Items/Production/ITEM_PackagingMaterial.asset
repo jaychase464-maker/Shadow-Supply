@@ -18,9 +18,9 @@ MonoBehaviour:
   category: 1
   maximumStack: 20
   baseValue: 8
-  displayPrefab: {fileID: 4628087692801289817, guid: f557272ae4fd9284a8cd7c2b46120855, type: 3}
+  displayPrefab: {fileID: 31635230477725295, guid: 893f9fd8d9fb1364f93a57fbe746ad18, type: 3}
   fallbackPrimitive: 3
   fallbackColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   heldLocalPosition: {x: 0.43, y: -0.38, z: 0.72}
   heldLocalEulerAngles: {x: 6, y: -20, z: 0}
-  heldLocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  heldLocalScale: {x: 1, y: 1, z: 1}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9180eae9833886f46a58ef99fb3ceff7, type: 3}
+  m_Name: STOCK_Elias_PigmentCapsule
+  m_EditorClassIdentifier: 
+  stockId: elias-stock-pigment-capsule
+  displayName: Pigment Capsule
+  description: Sealed press pigment. Elias limits quantities until payment history
+    improves.
+  item: {fileID: 11400000, guid: 22f391ce708b29846a023ce87ed6ee84, type: 2}
+  maximumStock: 6
+  baseUnitPrice: 36
+  minimumSuccessfulPurchases: 0
+  minimumRapport: -100
+  minimumTrust: -100
+  minimumRespect: -100

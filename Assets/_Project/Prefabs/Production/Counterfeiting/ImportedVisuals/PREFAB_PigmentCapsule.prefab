@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6801733174459010200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3619246806281373358}
+  m_Layer: 0
+  m_Name: PREFAB_PigmentCapsule
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3619246806281373358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801733174459010200}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8452436561678442097}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &8270771897485195674
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3619246806281373358}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 12.602305
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 12.602305
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 12.602305
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.11912129
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.880013e-11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5a56cdf7871276c4b95bb2bae979d125, type: 2}
+    - target: {fileID: 919132149155446097, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+      propertyPath: m_Name
+      value: Pigment Capsule Mesh
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+--- !u!4 &8452436561678442097 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 50b7d0d3385ea40498ccb944495c16e0, type: 3}
+  m_PrefabInstance: {fileID: 8270771897485195674}
+  m_PrefabAsset: {fileID: 0}

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stockId: elias-stock-packaging
   displayName: Packaging Material
-  description: Basic wrap, tape, and seals. Elias is willing to sell this immediately.
+  description: Basic wrap, bands, and seals.
   item: {fileID: 11400000, guid: e106679f07618ec45b2927ed6d75d58d, type: 2}
-  maximumStock: 8
+  maximumStock: 10
   baseUnitPrice: 12
   minimumSuccessfulPurchases: 0
   minimumRapport: -100

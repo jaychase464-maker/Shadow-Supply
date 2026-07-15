@@ -12,6 +12,7 @@ using ShadowSupply.Placement;
 using ShadowSupply.Properties;
 using ShadowSupply.Relationships;
 using ShadowSupply.Production;
+using ShadowSupply.Progression;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,9 +21,9 @@ namespace ShadowSupply.SaveSystem
     [DefaultExecutionOrder(-500)]
     public sealed class SaveManager : MonoBehaviour
     {
-        public const int CurrentSaveVersion = 9;
+        public const int CurrentSaveVersion = 10;
         public const string CurrentGameVersion =
-            "v0.8.7-first-supplier-relationship";
+            "v0.9.0-opening-counterfeiting-branch";
 
         public static SaveManager Instance { get; private set; }
 
@@ -419,7 +420,11 @@ namespace ShadowSupply.SaveSystem
                 buyerRelationships =
                     CaptureBuyerRelationships(),
                 supplierRelationships =
-                    CaptureSupplierRelationships()
+                    CaptureSupplierRelationships(),
+                counterfeitPresses =
+                    CaptureCounterfeitPresses(),
+                industryReputations =
+                    CaptureIndustryReputations()
             };
 
             return data;
@@ -1080,6 +1085,120 @@ namespace ShadowSupply.SaveSystem
             return data;
         }
 
+        private List<CounterfeitPressSaveData>
+            CaptureCounterfeitPresses()
+        {
+            List<CounterfeitPressSaveData> data =
+                new List<CounterfeitPressSaveData>();
+
+            CounterfeitPressStation[] stations =
+                FindObjectsByType<CounterfeitPressStation>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            foreach (
+                CounterfeitPressStation station
+                in stations
+            )
+            {
+                if (
+                    station == null ||
+                    string.IsNullOrWhiteSpace(
+                        station.StationId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                data.Add(
+                    new CounterfeitPressSaveData
+                    {
+                        stationId =
+                            station.StationId,
+                        processActive =
+                            station.ProcessActive,
+                        currentStep =
+                            station.CurrentStep,
+                        mistakeCount =
+                            station.MistakeCount,
+                        printProgress =
+                            station.PrintProgress,
+                        activeBaseQualityScore =
+                            station
+                                .ActiveBaseQualityScore,
+                        activeBaseCondition =
+                            station
+                                .ActiveBaseCondition,
+                        pendingOutputItemId =
+                            station.PendingOutputItem != null
+                                ? station
+                                    .PendingOutputItem.ItemId
+                                : string.Empty,
+                        pendingOutputQuantity =
+                            station
+                                .PendingOutputQuantity,
+                        pendingOutputQuality =
+                            (int)station
+                                .PendingOutputQuality,
+                        pendingOutputCondition =
+                            station
+                                .PendingOutputCondition
+                    }
+                );
+            }
+
+            return data;
+        }
+
+        private List<IndustryReputationSaveData>
+            CaptureIndustryReputations()
+        {
+            List<IndustryReputationSaveData> data =
+                new List<IndustryReputationSaveData>();
+
+            IndustryReputationSystem system =
+                FindFirstObjectByType<
+                    IndustryReputationSystem
+                >(
+                    FindObjectsInactive.Include
+                );
+
+            if (system == null)
+            {
+                return data;
+            }
+
+            foreach (
+                IndustryReputationEntry entry
+                in system.Entries
+            )
+            {
+                if (
+                    entry == null ||
+                    string.IsNullOrWhiteSpace(
+                        entry.IndustryId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                data.Add(
+                    new IndustryReputationSaveData
+                    {
+                        industryId =
+                            entry.IndustryId,
+                        reputation =
+                            entry.Reputation
+                    }
+                );
+            }
+
+            return data;
+        }
+
         private void ApplySaveData(SaveGameData data)
         {
             ResolveSceneReferences();
@@ -1110,6 +1229,12 @@ namespace ShadowSupply.SaveSystem
             );
             RestoreSupplierRelationships(
                 data.supplierRelationships
+            );
+            RestoreIndustryReputations(
+                data.industryReputations
+            );
+            RestoreCounterfeitPresses(
+                data.counterfeitPresses
             );
 
             if (hotbarController != null)
@@ -1875,6 +2000,140 @@ namespace ShadowSupply.SaveSystem
             }
         }
 
+        private void RestoreIndustryReputations(
+            List<IndustryReputationSaveData> data
+        )
+        {
+            IndustryReputationSystem system =
+                FindFirstObjectByType<
+                    IndustryReputationSystem
+                >(
+                    FindObjectsInactive.Include
+                );
+
+            if (system == null)
+            {
+                return;
+            }
+
+            system.ResetAll();
+
+            if (data == null)
+            {
+                return;
+            }
+
+            foreach (
+                IndustryReputationSaveData entry
+                in data
+            )
+            {
+                if (
+                    entry == null ||
+                    string.IsNullOrWhiteSpace(
+                        entry.industryId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                system.SetReputation(
+                    entry.industryId,
+                    entry.reputation
+                );
+            }
+        }
+
+        private void RestoreCounterfeitPresses(
+            List<CounterfeitPressSaveData> data
+        )
+        {
+            CounterfeitPressStation[] currentStations =
+                FindObjectsByType<CounterfeitPressStation>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            Dictionary<string, CounterfeitPressStation>
+                stationsById =
+                    new Dictionary<
+                        string,
+                        CounterfeitPressStation
+                    >(
+                        StringComparer.Ordinal
+                    );
+
+            foreach (
+                CounterfeitPressStation station
+                in currentStations
+            )
+            {
+                if (
+                    station == null ||
+                    string.IsNullOrWhiteSpace(
+                        station.StationId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                station.ResetToDefaultState();
+
+                stationsById[
+                    station.StationId
+                ] = station;
+            }
+
+            if (data == null)
+            {
+                return;
+            }
+
+            foreach (
+                CounterfeitPressSaveData stationData
+                in data
+            )
+            {
+                if (
+                    stationData == null ||
+                    string.IsNullOrWhiteSpace(
+                        stationData.stationId
+                    ) ||
+                    !stationsById.TryGetValue(
+                        stationData.stationId,
+                        out CounterfeitPressStation station
+                    )
+                )
+                {
+                    continue;
+                }
+
+                station.RestoreState(
+                    stationData.processActive,
+                    stationData.currentStep,
+                    stationData.mistakeCount,
+                    stationData.printProgress,
+                    stationData
+                        .activeBaseQualityScore,
+                    stationData
+                        .activeBaseCondition,
+                    stationData
+                        .pendingOutputItemId,
+                    stationData
+                        .pendingOutputQuantity,
+                    ParseQuality(
+                        stationData
+                            .pendingOutputQuality
+                    ),
+                    stationData
+                        .pendingOutputCondition,
+                    itemDatabase
+                );
+            }
+        }
+
         private static void MigrateSaveData(
             SaveGameData data
         )
@@ -1928,6 +2187,12 @@ namespace ShadowSupply.SaveSystem
 
             data.supplierRelationships ??=
                 new List<SupplierRelationshipSaveData>();
+
+            data.counterfeitPresses ??=
+                new List<CounterfeitPressSaveData>();
+
+            data.industryReputations ??=
+                new List<IndustryReputationSaveData>();
 
             foreach (
                 ProductionWorkbenchSaveData workbench
@@ -2008,7 +2273,16 @@ namespace ShadowSupply.SaveSystem
                 }
             }
 
-            data.saveVersion = 9;
+            if (data.saveVersion < 10)
+            {
+                data.counterfeitPresses =
+                    new List<CounterfeitPressSaveData>();
+
+                data.industryReputations =
+                    new List<IndustryReputationSaveData>();
+            }
+
+            data.saveVersion = 10;
         }
 
         private void RestoreWallet(

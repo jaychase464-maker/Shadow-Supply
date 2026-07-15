@@ -2,50 +2,41 @@
 
 ## Current test version
 
-`v0.8.7-first-supplier-relationship`
+`v0.9.3-counterfeit-visual-integration`
 
-## Confirmed through v0.8.6
+## Confirmed through v0.8.7
 
-- Physical garage electrical system
-- Interactive workbench production
-- Sealed Hardware Package
-- Workbench targeting
-- Fixture-origin lighting
-- Mara Voss persistent buyer relationship
-- Rapport, trust, and respect
-- Escalating buyer orders
-- Physical product handoff
-- Dirty-cash buyer payments
-- Buyer referral state
-- Save schema 8
+- Physical garage power
+- Mara Voss buyer relationship
+- Elias Mercer supplier relationship
+- Physical supplier deliveries
+- Save schema 9
 
 ## Current unconfirmed milestone
 
-### Milestone 8D — First Persistent Supplier Relationship
+### Milestone 9A — Opening Counterfeiting Branch
 
-Added:
+- Powered nine-step imprint press
+- Replica Note Bundle
+- Counterfeiting materials
+- Mistake-based quality
+- Counterfeiting reputation
+- Mara and Elias conversion
+- Save schema 10
 
-- Elias Mercer persistent supplier NPC
-- Mara referral gate
-- Supplier introduction choice
-- Rapport
-- Payment trust
-- Business respect
-- Relationship-gated stock
-- Limited supplier quantities
-- Dynamic relationship pricing
-- Clean-cash supplier purchases
-- Delayed physical garage deliveries
-- Existing delivery-crate integration
-- Stock restocking
-- Purchase history
-- Save schema 9 supplier persistence
-- Play Mode referral testing override
+### Included hotfixes
 
-## Next after confirmation
+- v0.9.1 production labels and non-penalty selection guidance
+- v0.9.2 horizontal drop-zone validation
 
-- Begin the opening counterfeiting production branch
-- Replace development recipe materials with the first fictionalized
-  counterfeiting supply chain
-- Connect supplier stock to ShadowOS after the in-person relationship is
-  established
+### v0.9.3 visual integration
+
+- Ten imported Meshy models
+- Optimized textures
+- URP materials
+- Transparent Security Film
+- Normalized visual prefabs
+- Imported inventory and held-item visuals
+- Imported intermediate production visuals
+- Imported press and cutting-mat visuals
+- Imported completed-output visual

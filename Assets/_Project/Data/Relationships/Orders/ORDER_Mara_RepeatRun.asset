@@ -13,15 +13,14 @@ MonoBehaviour:
   m_Name: ORDER_Mara_RepeatRun
   m_EditorClassIdentifier: 
   orderId: order-mara-repeat-run
-  displayName: Repeat Run
-  description: The first handoff was clean. Mara now wants two packages without excuses
-    or delays.
-  requestedItem: {fileID: 11400000, guid: 5ccecdff74df46b4a82e72417b386201, type: 2}
+  displayName: Repeat Replica Run
+  description: Mara wants two additional bundles after the first handoff proves reliable.
+  requestedItem: {fileID: 11400000, guid: 8221cbebf5229f3428ed357eee4670da, type: 2}
   quantity: 2
   minimumQuality: 1
   deadlineSeconds: 720
-  baseDirtyCashReward: 540
-  qualityBonusPerTier: 40
+  baseDirtyCashReward: 720
+  qualityBonusPerTier: 55
   minimumSuccessfulOrders: 1
   minimumRapport: -100
   minimumTrust: 8

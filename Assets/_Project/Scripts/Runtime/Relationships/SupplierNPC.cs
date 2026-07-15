@@ -870,6 +870,11 @@ namespace ShadowSupply.Relationships
 
             RebuildRuntimeStock(false);
 
+            HashSet<string> restoredStockIds =
+                new HashSet<string>(
+                    StringComparer.Ordinal
+                );
+
             if (restoredStock != null)
             {
                 foreach (
@@ -892,10 +897,39 @@ namespace ShadowSupply.Relationships
                             saved.stockId
                         );
 
-                    state?.SetStock(
+                    if (state == null)
+                    {
+                        continue;
+                    }
+
+                    state.SetStock(
                         saved.currentStock
                     );
+
+                    restoredStockIds.Add(
+                        saved.stockId
+                    );
                 }
+            }
+
+            foreach (
+                SupplierStockRuntimeState state
+                in runtimeStock
+            )
+            {
+                if (
+                    state?.Definition == null ||
+                    restoredStockIds.Contains(
+                        state.Definition.StockId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                state.SetStock(
+                    state.Definition.MaximumStock
+                );
             }
 
             pendingStock =
