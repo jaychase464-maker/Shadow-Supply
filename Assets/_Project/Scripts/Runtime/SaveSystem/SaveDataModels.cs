@@ -31,6 +31,9 @@ namespace ShadowSupply.SaveSystem
         public List<ProductionWorkbenchSaveData>
             productionWorkbenches =
                 new List<ProductionWorkbenchSaveData>();
+        public List<BuyerRelationshipSaveData>
+            buyerRelationships =
+                new List<BuyerRelationshipSaveData>();
     }
 
     [Serializable]
@@ -163,6 +166,29 @@ namespace ShadowSupply.SaveSystem
         public float pendingCondition = 1f;
         public List<int> completedStepIndices =
             new List<int>();
+    }
+
+    [Serializable]
+    public sealed class BuyerRelationshipSaveData
+    {
+        public string buyerId;
+        public bool introductionCompleted;
+        public int introductionChoice = -1;
+        public int rapport;
+        public int trust;
+        public int respect;
+        public int successfulOrders;
+        public int failedOrders;
+        public int declinedOrders;
+        public bool referralUnlocked;
+        public int orderState;
+        public string activeOrderId;
+        public int deliveredQuantity;
+        public float deliveredQualityTotal;
+        public float deliveredConditionTotal;
+        public float remainingDeadlineSeconds;
+        public float cooldownRemainingSeconds;
+        public int lastReward;
     }
 
     [Serializable]

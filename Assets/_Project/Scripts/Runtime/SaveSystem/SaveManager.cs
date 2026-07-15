@@ -10,6 +10,7 @@ using ShadowSupply.Inventory;
 using ShadowSupply.Player;
 using ShadowSupply.Placement;
 using ShadowSupply.Properties;
+using ShadowSupply.Relationships;
 using ShadowSupply.Production;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,9 +20,9 @@ namespace ShadowSupply.SaveSystem
     [DefaultExecutionOrder(-500)]
     public sealed class SaveManager : MonoBehaviour
     {
-        public const int CurrentSaveVersion = 7;
+        public const int CurrentSaveVersion = 8;
         public const string CurrentGameVersion =
-            "v0.8.3-interactive-production-framework";
+            "v0.8.6-first-buyer-relationship";
 
         public static SaveManager Instance { get; private set; }
 
@@ -414,7 +415,9 @@ namespace ShadowSupply.SaveSystem
                 electrical =
                     CaptureElectricalSystem(),
                 productionWorkbenches =
-                    CaptureProductionWorkbenches()
+                    CaptureProductionWorkbenches(),
+                buyerRelationships =
+                    CaptureBuyerRelationships()
             };
 
             return data;
@@ -908,6 +911,73 @@ namespace ShadowSupply.SaveSystem
             return data;
         }
 
+
+        private List<BuyerRelationshipSaveData>
+            CaptureBuyerRelationships()
+        {
+            List<BuyerRelationshipSaveData> data =
+                new List<BuyerRelationshipSaveData>();
+
+            BuyerNPC[] buyers =
+                FindObjectsByType<BuyerNPC>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            foreach (BuyerNPC buyer in buyers)
+            {
+                if (
+                    buyer == null ||
+                    string.IsNullOrWhiteSpace(buyer.BuyerId)
+                )
+                {
+                    continue;
+                }
+
+                data.Add(
+                    new BuyerRelationshipSaveData
+                    {
+                        buyerId = buyer.BuyerId,
+                        introductionCompleted =
+                            buyer.IntroductionCompleted,
+                        introductionChoice =
+                            buyer.IntroductionChoice,
+                        rapport = buyer.Rapport,
+                        trust = buyer.Trust,
+                        respect = buyer.Respect,
+                        successfulOrders =
+                            buyer.SuccessfulOrders,
+                        failedOrders =
+                            buyer.FailedOrders,
+                        declinedOrders =
+                            buyer.DeclinedOrders,
+                        referralUnlocked =
+                            buyer.ReferralUnlocked,
+                        orderState =
+                            (int)buyer.OrderState,
+                        activeOrderId =
+                            buyer.ActiveOrder != null
+                                ? buyer.ActiveOrder.OrderId
+                                : string.Empty,
+                        deliveredQuantity =
+                            buyer.DeliveredQuantity,
+                        deliveredQualityTotal =
+                            buyer.DeliveredQualityTotal,
+                        deliveredConditionTotal =
+                            buyer.DeliveredConditionTotal,
+                        remainingDeadlineSeconds =
+                            buyer.RemainingDeadlineSeconds,
+                        cooldownRemainingSeconds =
+                            buyer.CooldownRemainingSeconds,
+                        lastReward =
+                            buyer.LastReward
+                    }
+                );
+            }
+
+            return data;
+        }
+
         private void ApplySaveData(SaveGameData data)
         {
             ResolveSceneReferences();
@@ -932,6 +1002,9 @@ namespace ShadowSupply.SaveSystem
             RestoreElectricalSystem(data.electrical);
             RestoreProductionWorkbenches(
                 data.productionWorkbenches
+            );
+            RestoreBuyerRelationships(
+                data.buyerRelationships
             );
 
             if (hotbarController != null)
@@ -1531,6 +1604,85 @@ namespace ShadowSupply.SaveSystem
             }
         }
 
+
+        private void RestoreBuyerRelationships(
+            List<BuyerRelationshipSaveData> data
+        )
+        {
+            BuyerNPC[] currentBuyers =
+                FindObjectsByType<BuyerNPC>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            Dictionary<string, BuyerNPC> buyersById =
+                new Dictionary<string, BuyerNPC>(
+                    StringComparer.Ordinal
+                );
+
+            foreach (BuyerNPC buyer in currentBuyers)
+            {
+                if (
+                    buyer == null ||
+                    string.IsNullOrWhiteSpace(buyer.BuyerId)
+                )
+                {
+                    continue;
+                }
+
+                buyer.ResetToDefaultState();
+                buyersById[buyer.BuyerId] = buyer;
+            }
+
+            if (data == null)
+            {
+                return;
+            }
+
+            foreach (BuyerRelationshipSaveData buyerData in data)
+            {
+                if (
+                    buyerData == null ||
+                    string.IsNullOrWhiteSpace(buyerData.buyerId) ||
+                    !buyersById.TryGetValue(
+                        buyerData.buyerId,
+                        out BuyerNPC buyer
+                    )
+                )
+                {
+                    continue;
+                }
+
+                BuyerOrderState restoredOrderState =
+                    Enum.IsDefined(
+                        typeof(BuyerOrderState),
+                        buyerData.orderState
+                    )
+                        ? (BuyerOrderState)buyerData.orderState
+                        : BuyerOrderState.None;
+
+                buyer.RestoreState(
+                    buyerData.introductionCompleted,
+                    buyerData.introductionChoice,
+                    buyerData.rapport,
+                    buyerData.trust,
+                    buyerData.respect,
+                    buyerData.successfulOrders,
+                    buyerData.failedOrders,
+                    buyerData.declinedOrders,
+                    buyerData.referralUnlocked,
+                    restoredOrderState,
+                    buyerData.activeOrderId,
+                    buyerData.deliveredQuantity,
+                    buyerData.deliveredQualityTotal,
+                    buyerData.deliveredConditionTotal,
+                    buyerData.remainingDeadlineSeconds,
+                    buyerData.cooldownRemainingSeconds,
+                    buyerData.lastReward
+                );
+            }
+        }
+
         private static void MigrateSaveData(
             SaveGameData data
         )
@@ -1578,6 +1730,9 @@ namespace ShadowSupply.SaveSystem
 
             data.productionWorkbenches ??=
                 new List<ProductionWorkbenchSaveData>();
+
+            data.buyerRelationships ??=
+                new List<BuyerRelationshipSaveData>();
 
             foreach (
                 ProductionWorkbenchSaveData workbench
@@ -1632,7 +1787,13 @@ namespace ShadowSupply.SaveSystem
                 }
             }
 
-            data.saveVersion = 7;
+            if (data.saveVersion < 8)
+            {
+                data.buyerRelationships =
+                    new List<BuyerRelationshipSaveData>();
+            }
+
+            data.saveVersion = 8;
         }
 
         private void RestoreWallet(

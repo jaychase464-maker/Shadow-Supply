@@ -1,24 +1,26 @@
 {
-  "name": "ShadowSupply_v0.8.5_WorkbenchTargetLightingHotfix",
-  "version": "v0.8.5-workbench-target-lighting-hotfix",
+  "name": "ShadowSupply_Milestone8C_FirstBuyerRelationship",
+  "version": "v0.8.6-first-buyer-relationship",
   "unity_version": "6000.0.58f2",
+  "save_schema": 8,
+  "prerequisite": "Confirmed v0.8.5",
   "extract_to": "Unity project root",
-  "setup_menu": "Shadow Supply/Setup/Apply v0.8.5 Workbench Target + Lighting Hotfix",
-  "validation_menu": "Shadow Supply/Validation/Validate v0.8.5 Workbench Target + Lighting",
+  "setup_menu": "Shadow Supply/Setup/Apply Milestone 8C First Buyer Relationship",
+  "validation_menu": "Shadow Supply/Validation/Validate Milestone 8C First Buyer Relationship",
   "confirmed": false,
   "discord_post_withheld": true,
-  "fixes": [
-    "large non-blocking workbench interaction target",
-    "startup light-state synchronization",
-    "three light sources per fluorescent fixture",
-    "emissive diffuser visual synchronized to real light state"
-  ],
   "files": [
-    "Assets/_Project/Scripts/Editor/Milestone8InteractionLightingHotfixSetup.cs",
-    "Assets/_Project/Scripts/Runtime/Production/PoweredWorkbenchProduction.cs",
-    "Assets/_Project/Scripts/Runtime/Properties/StarterGarageFluorescentFixture.cs",
-    "Assets/_Project/Scripts/Runtime/Properties/StarterGarageLightSwitch.cs",
+    "Assets/_Project/Scripts/Editor/Milestone8CFirstBuyerRelationshipSetup.cs",
+    "Assets/_Project/Scripts/Runtime/Relationships/BuyerDefinition.cs",
+    "Assets/_Project/Scripts/Runtime/Relationships/BuyerNPC.cs",
+    "Assets/_Project/Scripts/Runtime/Relationships/BuyerOrderDefinition.cs",
+    "Assets/_Project/Scripts/Runtime/Relationships/BuyerRelationshipHUD.cs",
+    "Assets/_Project/Scripts/Runtime/Relationships/BuyerWorldMarker.cs",
+    "Assets/_Project/Scripts/Runtime/SaveSystem/SaveDataModels.cs",
+    "Assets/_Project/Scripts/Runtime/SaveSystem/SaveManager.cs",
+    "CHANGELOG.md",
+    "CURRENT_STATUS.md",
     "DISCORD_DRAFT_DO_NOT_POST_UNTIL_CONFIRMED.md",
-    "Documentation/WORKBENCH_TARGET_LIGHTING_HOTFIX_v0.8.5.md"
+    "Documentation/MILESTONE_08C_FIRST_BUYER_RELATIONSHIP.md"
   ]
 }

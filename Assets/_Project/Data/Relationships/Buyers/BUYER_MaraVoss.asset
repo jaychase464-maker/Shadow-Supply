@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a59035163a696e409e3cd3a9ffc521c, type: 3}
+  m_Name: BUYER_MaraVoss
+  m_EditorClassIdentifier: 
+  buyerId: buyer-mara-voss
+  displayName: Mara Voss
+  districtId: blackwater-south
+  districtName: Blackwater South
+  biography: A cautious neighborhood buyer who values reliable work, quiet handoffs,
+    and people who keep their word.
+  initialRapport: 0
+  initialTrust: 0
+  initialRespect: 0
+  orders:
+  - {fileID: 11400000, guid: dd4d3fba307dfbe40980b5a59d67e3b2, type: 2}
+  - {fileID: 11400000, guid: bfbc057ce06bfe14b858bc4d59ebef4b, type: 2}
+  - {fileID: 11400000, guid: fa61e9013b3af71449c563d51fe32b0c, type: 2}
+  repeatOrderCooldown: 25
+  referralId: contact-print-supply-broker
+  referralDisplayName: Print-Supply Broker
+  referralSuccessfulOrders: 3
+  referralTrust: 24
+  referralRespect: 18

@@ -1,69 +1,42 @@
 # Shadow Supply — Current Status
 
-## Current confirmed version
+## Current test version
 
-`v0.8.5-workbench-target-lighting-hotfix`
+`v0.8.6-first-buyer-relationship`
 
-## Confirmed systems
+## Confirmed before this milestone
 
-- First-person controller
-- Inventory and hotbar
-- Save/load foundation
-- Persistent furniture placement
-- Furniture ownership and deliveries
-- Modular visible player character
-- Modular starter garage
-- Functional garage doors and lighting
-- Main and branch electrical circuits
-- Physical workbench plug
-- Individual outlet sockets
-- Cable sag, reach, and floor following
-- Breaker state and load tracking
-- Electrical save persistence
-- Powered workbench
-- First production recipe
-- Ingredient quality calculation
-- Manual top-down production view
-- Clickable reusable tool step
-- Draggable physical ingredients
-- Open package and drop zone
-- Clickable closing lid
-- Finished-output collection
-- Partial interactive-production save persistence
-- Broad workbench interaction target
-- Startup lighting synchronization
-- Fixture-origin garage lighting
-- Emissive fluorescent diffusers
+- Physical garage electrical system
+- Interactive workbench production
+- Sealed Hardware Package
+- Workbench targeting
+- Fixture-origin lighting
+- Save schema 7
 
-## Locked core direction
-
-- Every future production recipe must use manual interaction steps.
-- Major opportunities must be unlocked through NPC relationships, factions, districts, skills, properties, equipment, or earned introductions.
-- A generic level cannot be the sole unlock requirement.
-- The story must feed a persistent sandbox rather than end the game.
-- New worlds must produce materially different criminal careers.
-
-## Canonical release vision
-
-Read:
-
-`Documentation/SHADOW_SUPPLY_GAME_BIBLE.md`
-
-## Next gameplay milestone
+## Current unconfirmed milestone
 
 ### Milestone 8C — First Persistent Buyer Relationship and Order
 
-The first buyer must introduce:
+Added:
 
-- Persistent NPC identity
+- Mara Voss persistent buyer NPC
+- First-impression dialogue choice
 - Rapport
 - Trust
 - Respect
-- Product preference
-- Quality requirement
-- Quantity
-- Deadline
-- Physical handoff
-- Relationship rewards and penalties
-- Referral potential
-- Future order progression
+- Descriptive relationship states
+- Three escalating buyer orders
+- Quantity and quality requirements
+- Deadlines
+- Physical held-item handoff
+- Dirty-cash payment
+- Success, failure, decline, and cancellation consequences
+- Order history
+- Referral unlock state
+- Save schema 8 buyer persistence
+
+## Next after confirmation
+
+- Replace the development buyer visual if needed
+- Connect Mara's referral to the first persistent supplier
+- Begin opening-game counterfeiting production direction
