@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9180eae9833886f46a58ef99fb3ceff7, type: 3}
+  m_Name: STOCK_Elias_Polymer
+  m_EditorClassIdentifier: 
+  stockId: elias-stock-polymer
+  displayName: Polymer Housing
+  description: Consistent molded housings. Available after Elias sees one clean payment.
+  item: {fileID: 11400000, guid: a732b9f88a74ba24caa9a4776c4d0da9, type: 2}
+  maximumStock: 5
+  baseUnitPrice: 32
+  minimumSuccessfulPurchases: 1
+  minimumRapport: -100
+  minimumTrust: 4
+  minimumRespect: 1

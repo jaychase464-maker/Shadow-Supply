@@ -1,28 +1,35 @@
 # Changelog
 
-## v0.8.6 — First Buyer Relationship
+## v0.8.7 — First Supplier Relationship
 
 ### Added
 
-- BuyerDefinition ScriptableObject
-- BuyerOrderDefinition ScriptableObject
-- Mara Voss persistent buyer NPC
-- Buyer relationship interface
-- Rapport, trust, and respect
-- Descriptive relationship states
-- First-impression choice
-- Trial Package order
-- Repeat Run order
-- Network Test order
-- Quality and quantity validation
-- Physical hotbar item handoff
-- Dirty-cash rewards
-- Relationship consequences
-- Failure and decline states
-- Order deadlines and cooldowns
-- Referral unlock state
-- Buyer world label
-- Optional imported female model discovery
-- Development fallback buyer visual
-- Save schema 8
-- Milestone setup and validation menus
+- SupplierDefinition ScriptableObject
+- SupplierStockDefinition ScriptableObject
+- Elias Mercer persistent supplier
+- Mara Voss referral gate
+- Supplier introduction dialogue
+- Supplier rapport
+- Supplier trust
+- Supplier respect
+- Purchase history
+- Lifetime spending
+- Relationship-based pricing
+- Relationship-gated catalog items
+- Limited stock
+- Stock refresh timer
+- Quantity selection
+- Clean-cash purchases
+- Pending delivery state
+- Physical item delivery crates
+- Play Mode referral testing command
+- Supplier world marker
+- Save schema 9
+- Supplier setup and validation menus
+
+### Updated
+
+- FurnitureDeliverySystem now supports ordinary inventory-item deliveries
+  while preserving all furniture-order behavior
+- SaveManager version:
+  `v0.8.7-first-supplier-relationship`

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0024fd54ec61ff84d951cd77e709e1db, type: 3}
+  m_Name: SUPPLIER_EliasMercer
+  m_EditorClassIdentifier: 
+  supplierId: supplier-elias-mercer
+  displayName: Elias Mercer
+  districtId: blackwater-south
+  districtName: Blackwater South
+  biography: A cautious print and materials broker who works through referrals. Elias
+    starts with small quantities, watches payment history, and reserves better inventory
+    for reliable accounts.
+  requiredBuyerId: buyer-mara-voss
+  requiredReferralName: Mara Voss referral
+  initialRapport: 0
+  initialTrust: 0
+  initialRespect: 0
+  stock:
+  - {fileID: 11400000, guid: dde4cf8d5d3f06a45bb9cc19c9fe221d, type: 2}
+  - {fileID: 11400000, guid: 70afc2d88e81e5849909886afde3ea45, type: 2}
+  - {fileID: 11400000, guid: 37581b8ebcd827548a9f9a4c1e5f6a87, type: 2}
+  - {fileID: 11400000, guid: 1ace7fa59257dbd4b8dbf6e1397b20d8, type: 2}
+  restockSeconds: 120
+  deliveryDelaySeconds: 8

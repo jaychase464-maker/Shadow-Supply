@@ -2,41 +2,50 @@
 
 ## Current test version
 
-`v0.8.6-first-buyer-relationship`
+`v0.8.7-first-supplier-relationship`
 
-## Confirmed before this milestone
+## Confirmed through v0.8.6
 
 - Physical garage electrical system
 - Interactive workbench production
 - Sealed Hardware Package
 - Workbench targeting
 - Fixture-origin lighting
-- Save schema 7
+- Mara Voss persistent buyer relationship
+- Rapport, trust, and respect
+- Escalating buyer orders
+- Physical product handoff
+- Dirty-cash buyer payments
+- Buyer referral state
+- Save schema 8
 
 ## Current unconfirmed milestone
 
-### Milestone 8C — First Persistent Buyer Relationship and Order
+### Milestone 8D — First Persistent Supplier Relationship
 
 Added:
 
-- Mara Voss persistent buyer NPC
-- First-impression dialogue choice
+- Elias Mercer persistent supplier NPC
+- Mara referral gate
+- Supplier introduction choice
 - Rapport
-- Trust
-- Respect
-- Descriptive relationship states
-- Three escalating buyer orders
-- Quantity and quality requirements
-- Deadlines
-- Physical held-item handoff
-- Dirty-cash payment
-- Success, failure, decline, and cancellation consequences
-- Order history
-- Referral unlock state
-- Save schema 8 buyer persistence
+- Payment trust
+- Business respect
+- Relationship-gated stock
+- Limited supplier quantities
+- Dynamic relationship pricing
+- Clean-cash supplier purchases
+- Delayed physical garage deliveries
+- Existing delivery-crate integration
+- Stock restocking
+- Purchase history
+- Save schema 9 supplier persistence
+- Play Mode referral testing override
 
 ## Next after confirmation
 
-- Replace the development buyer visual if needed
-- Connect Mara's referral to the first persistent supplier
-- Begin opening-game counterfeiting production direction
+- Begin the opening counterfeiting production branch
+- Replace development recipe materials with the first fictionalized
+  counterfeiting supply chain
+- Connect supplier stock to ShadowOS after the in-person relationship is
+  established

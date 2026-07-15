@@ -34,6 +34,9 @@ namespace ShadowSupply.SaveSystem
         public List<BuyerRelationshipSaveData>
             buyerRelationships =
                 new List<BuyerRelationshipSaveData>();
+        public List<SupplierRelationshipSaveData>
+            supplierRelationships =
+                new List<SupplierRelationshipSaveData>();
     }
 
     [Serializable]
@@ -189,6 +192,33 @@ namespace ShadowSupply.SaveSystem
         public float remainingDeadlineSeconds;
         public float cooldownRemainingSeconds;
         public int lastReward;
+    }
+
+    [Serializable]
+    public sealed class SupplierRelationshipSaveData
+    {
+        public string supplierId;
+        public bool introductionCompleted;
+        public int introductionChoice = -1;
+        public int rapport;
+        public int trust;
+        public int respect;
+        public int successfulPurchases;
+        public int lifetimeCleanCashSpent;
+        public float restockRemainingSeconds;
+        public string pendingStockId;
+        public int pendingQuantity;
+        public int pendingTotalPrice;
+        public float pendingDeliverySeconds;
+        public List<SupplierStockSaveData> stock =
+            new List<SupplierStockSaveData>();
+    }
+
+    [Serializable]
+    public sealed class SupplierStockSaveData
+    {
+        public string stockId;
+        public int currentStock;
     }
 
     [Serializable]

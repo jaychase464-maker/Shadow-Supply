@@ -20,9 +20,9 @@ namespace ShadowSupply.SaveSystem
     [DefaultExecutionOrder(-500)]
     public sealed class SaveManager : MonoBehaviour
     {
-        public const int CurrentSaveVersion = 8;
+        public const int CurrentSaveVersion = 9;
         public const string CurrentGameVersion =
-            "v0.8.6-first-buyer-relationship";
+            "v0.8.7-first-supplier-relationship";
 
         public static SaveManager Instance { get; private set; }
 
@@ -417,7 +417,9 @@ namespace ShadowSupply.SaveSystem
                 productionWorkbenches =
                     CaptureProductionWorkbenches(),
                 buyerRelationships =
-                    CaptureBuyerRelationships()
+                    CaptureBuyerRelationships(),
+                supplierRelationships =
+                    CaptureSupplierRelationships()
             };
 
             return data;
@@ -978,6 +980,106 @@ namespace ShadowSupply.SaveSystem
             return data;
         }
 
+        private List<SupplierRelationshipSaveData>
+            CaptureSupplierRelationships()
+        {
+            List<SupplierRelationshipSaveData> data =
+                new List<SupplierRelationshipSaveData>();
+
+            SupplierNPC[] suppliers =
+                FindObjectsByType<SupplierNPC>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            foreach (
+                SupplierNPC supplier
+                in suppliers
+            )
+            {
+                if (
+                    supplier == null ||
+                    string.IsNullOrWhiteSpace(
+                        supplier.SupplierId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                SupplierRelationshipSaveData
+                    supplierData =
+                        new SupplierRelationshipSaveData
+                        {
+                            supplierId =
+                                supplier.SupplierId,
+                            introductionCompleted =
+                                supplier
+                                    .IntroductionCompleted,
+                            introductionChoice =
+                                supplier
+                                    .IntroductionChoice,
+                            rapport =
+                                supplier.Rapport,
+                            trust =
+                                supplier.Trust,
+                            respect =
+                                supplier.Respect,
+                            successfulPurchases =
+                                supplier
+                                    .SuccessfulPurchases,
+                            lifetimeCleanCashSpent =
+                                supplier
+                                    .LifetimeCleanCashSpent,
+                            restockRemainingSeconds =
+                                supplier
+                                    .RestockRemainingSeconds,
+                            pendingStockId =
+                                supplier.PendingStock != null
+                                    ? supplier
+                                        .PendingStock.StockId
+                                    : string.Empty,
+                            pendingQuantity =
+                                supplier.PendingQuantity,
+                            pendingTotalPrice =
+                                supplier.PendingTotalPrice,
+                            pendingDeliverySeconds =
+                                supplier
+                                    .PendingDeliverySeconds
+                        };
+
+                foreach (
+                    SupplierStockRuntimeState state
+                    in supplier.RuntimeStock
+                )
+                {
+                    if (
+                        state?.Definition == null ||
+                        string.IsNullOrWhiteSpace(
+                            state.Definition.StockId
+                        )
+                    )
+                    {
+                        continue;
+                    }
+
+                    supplierData.stock.Add(
+                        new SupplierStockSaveData
+                        {
+                            stockId =
+                                state.Definition.StockId,
+                            currentStock =
+                                state.CurrentStock
+                        }
+                    );
+                }
+
+                data.Add(supplierData);
+            }
+
+            return data;
+        }
+
         private void ApplySaveData(SaveGameData data)
         {
             ResolveSceneReferences();
@@ -1005,6 +1107,9 @@ namespace ShadowSupply.SaveSystem
             );
             RestoreBuyerRelationships(
                 data.buyerRelationships
+            );
+            RestoreSupplierRelationships(
+                data.supplierRelationships
             );
 
             if (hotbarController != null)
@@ -1683,6 +1788,93 @@ namespace ShadowSupply.SaveSystem
             }
         }
 
+        private void RestoreSupplierRelationships(
+            List<SupplierRelationshipSaveData> data
+        )
+        {
+            SupplierNPC[] currentSuppliers =
+                FindObjectsByType<SupplierNPC>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+            Dictionary<string, SupplierNPC>
+                suppliersById =
+                    new Dictionary<string, SupplierNPC>(
+                        StringComparer.Ordinal
+                    );
+
+            foreach (
+                SupplierNPC supplier
+                in currentSuppliers
+            )
+            {
+                if (
+                    supplier == null ||
+                    string.IsNullOrWhiteSpace(
+                        supplier.SupplierId
+                    )
+                )
+                {
+                    continue;
+                }
+
+                supplier.ResetToDefaultState();
+
+                suppliersById[
+                    supplier.SupplierId
+                ] = supplier;
+            }
+
+            if (data == null)
+            {
+                return;
+            }
+
+            foreach (
+                SupplierRelationshipSaveData
+                    supplierData
+                in data
+            )
+            {
+                if (
+                    supplierData == null ||
+                    string.IsNullOrWhiteSpace(
+                        supplierData.supplierId
+                    ) ||
+                    !suppliersById.TryGetValue(
+                        supplierData.supplierId,
+                        out SupplierNPC supplier
+                    )
+                )
+                {
+                    continue;
+                }
+
+                supplier.RestoreState(
+                    supplierData
+                        .introductionCompleted,
+                    supplierData
+                        .introductionChoice,
+                    supplierData.rapport,
+                    supplierData.trust,
+                    supplierData.respect,
+                    supplierData
+                        .successfulPurchases,
+                    supplierData
+                        .lifetimeCleanCashSpent,
+                    supplierData
+                        .restockRemainingSeconds,
+                    supplierData.pendingStockId,
+                    supplierData.pendingQuantity,
+                    supplierData.pendingTotalPrice,
+                    supplierData
+                        .pendingDeliverySeconds,
+                    supplierData.stock
+                );
+            }
+        }
+
         private static void MigrateSaveData(
             SaveGameData data
         )
@@ -1733,6 +1925,9 @@ namespace ShadowSupply.SaveSystem
 
             data.buyerRelationships ??=
                 new List<BuyerRelationshipSaveData>();
+
+            data.supplierRelationships ??=
+                new List<SupplierRelationshipSaveData>();
 
             foreach (
                 ProductionWorkbenchSaveData workbench
@@ -1793,7 +1988,27 @@ namespace ShadowSupply.SaveSystem
                     new List<BuyerRelationshipSaveData>();
             }
 
-            data.saveVersion = 8;
+            if (data.saveVersion < 9)
+            {
+                data.supplierRelationships =
+                    new List<
+                        SupplierRelationshipSaveData
+                    >();
+            }
+
+            foreach (
+                SupplierRelationshipSaveData supplier
+                in data.supplierRelationships
+            )
+            {
+                if (supplier != null)
+                {
+                    supplier.stock ??=
+                        new List<SupplierStockSaveData>();
+                }
+            }
+
+            data.saveVersion = 9;
         }
 
         private void RestoreWallet(

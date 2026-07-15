@@ -6,18 +6,25 @@ using UnityEngine;
 
 namespace ShadowSupply.Delivery
 {
-    public sealed class FurnitureDeliverySystem : MonoBehaviour
+    public sealed class FurnitureDeliverySystem :
+        MonoBehaviour
     {
-        [SerializeField] private PlayerWallet wallet;
-        [SerializeField] private Transform deliveryPoint;
-        [SerializeField] private GameObject deliveryCratePrefab;
-        [SerializeField, Min(0.2f)] private float crateSpacing = 1.25f;
+        [SerializeField]
+        private PlayerWallet wallet;
+        [SerializeField]
+        private Transform deliveryPoint;
+        [SerializeField]
+        private GameObject deliveryCratePrefab;
+        [SerializeField, Min(0.2f)]
+        private float crateSpacing = 1.25f;
 
         public event Action Changed;
-        public event Action<string, bool> StatusChanged;
+        public event Action<string, bool>
+            StatusChanged;
 
         public PlayerWallet Wallet => wallet;
-        public Transform DeliveryPoint => deliveryPoint;
+        public Transform DeliveryPoint =>
+            deliveryPoint;
 
         public void Configure(
             PlayerWallet playerWallet,
@@ -56,9 +63,14 @@ namespace ShadowSupply.Delivery
             }
 
             int price =
-                Mathf.Max(0, definition.PurchasePrice);
+                Mathf.Max(
+                    0,
+                    definition.PurchasePrice
+                );
 
-            if (!wallet.TrySpendCleanCash(price))
+            if (
+                !wallet.TrySpendCleanCash(price)
+            )
             {
                 Publish(
                     $"Not enough clean cash for " +
@@ -82,14 +94,16 @@ namespace ShadowSupply.Delivery
                 wallet.AddCleanCash(price);
 
                 Publish(
-                    "Delivery creation failed. Payment refunded.",
+                    "Delivery creation failed. " +
+                    "Payment refunded.",
                     false
                 );
                 return false;
             }
 
             Publish(
-                $"Ordered {definition.DisplayName} for ${price:N0}.",
+                $"Ordered {definition.DisplayName} " +
+                $"for ${price:N0}.",
                 true
             );
 
@@ -97,32 +111,94 @@ namespace ShadowSupply.Delivery
             return true;
         }
 
-        public FurnitureDeliveryCrate SpawnRestoredDelivery(
-            string persistentId,
-            ItemDefinition item,
-            int quantity,
-            Vector3 position,
-            Quaternion rotation
-        )
+        public FurnitureDeliveryCrate
+            SpawnItemDelivery(
+                ItemDefinition item,
+                int quantity,
+                string sourceName = null
+            )
         {
-            return SpawnDelivery(
-                item,
-                quantity,
-                persistentId,
-                position,
-                rotation
+            if (
+                item == null ||
+                quantity <= 0
+            )
+            {
+                Publish(
+                    "Item delivery data is invalid.",
+                    false
+                );
+                return null;
+            }
+
+            FurnitureDeliveryCrate crate =
+                SpawnDelivery(
+                    item,
+                    quantity,
+                    null,
+                    GetNextDeliveryPosition(),
+                    Quaternion.identity
+                );
+
+            if (crate == null)
+            {
+                Publish(
+                    $"Could not create delivery for " +
+                    $"{item.DisplayName}.",
+                    false
+                );
+                return null;
+            }
+
+            string source =
+                string.IsNullOrWhiteSpace(
+                    sourceName
+                )
+                    ? "Supplier"
+                    : sourceName;
+
+            Publish(
+                $"{source} delivered " +
+                $"{item.DisplayName} x{quantity}.",
+                true
             );
+
+            Changed?.Invoke();
+            return crate;
+        }
+
+        public FurnitureDeliveryCrate
+            SpawnRestoredDelivery(
+                string persistentId,
+                ItemDefinition item,
+                int quantity,
+                Vector3 position,
+                Quaternion rotation
+            )
+        {
+            return
+                SpawnDelivery(
+                    item,
+                    quantity,
+                    persistentId,
+                    position,
+                    rotation
+                );
         }
 
         public void ClearCurrentDeliveries()
         {
             FurnitureDeliveryCrate[] crates =
-                FindObjectsByType<FurnitureDeliveryCrate>(
+                FindObjectsByType<
+                    FurnitureDeliveryCrate
+                >(
                     FindObjectsInactive.Include,
                     FindObjectsSortMode.None
                 );
 
-            foreach (FurnitureDeliveryCrate crate in crates)
+            foreach (
+                FurnitureDeliveryCrate crate
+                in crates
+            )
             {
                 if (crate == null)
                 {
@@ -136,13 +212,14 @@ namespace ShadowSupply.Delivery
             Changed?.Invoke();
         }
 
-        private FurnitureDeliveryCrate SpawnDelivery(
-            ItemDefinition item,
-            int quantity,
-            string persistentId,
-            Vector3 position,
-            Quaternion rotation
-        )
+        private FurnitureDeliveryCrate
+            SpawnDelivery(
+                ItemDefinition item,
+                int quantity,
+                string persistentId,
+                Vector3 position,
+                Quaternion rotation
+            )
         {
             if (
                 item == null ||
@@ -152,17 +229,22 @@ namespace ShadowSupply.Delivery
                 return null;
             }
 
-            GameObject instance = Instantiate(
-                deliveryCratePrefab,
-                position,
-                rotation
-            );
+            GameObject instance =
+                Instantiate(
+                    deliveryCratePrefab,
+                    position,
+                    rotation
+                );
 
             instance.SetActive(true);
 
             FurnitureDeliveryCrate crate =
-                instance.GetComponent<FurnitureDeliveryCrate>() ??
-                instance.AddComponent<FurnitureDeliveryCrate>();
+                instance.GetComponent<
+                    FurnitureDeliveryCrate
+                >() ??
+                instance.AddComponent<
+                    FurnitureDeliveryCrate
+                >();
 
             crate.Initialize(
                 persistentId,
@@ -181,7 +263,9 @@ namespace ShadowSupply.Delivery
                     : transform.position;
 
             FurnitureDeliveryCrate[] crates =
-                FindObjectsByType<FurnitureDeliveryCrate>(
+                FindObjectsByType<
+                    FurnitureDeliveryCrate
+                >(
                     FindObjectsInactive.Exclude,
                     FindObjectsSortMode.None
                 );
@@ -196,8 +280,12 @@ namespace ShadowSupply.Delivery
 
             return
                 basePosition +
-                Vector3.right * column * crateSpacing +
-                Vector3.forward * row * crateSpacing;
+                Vector3.right *
+                column *
+                crateSpacing +
+                Vector3.forward *
+                row *
+                crateSpacing;
         }
 
         private void Publish(
@@ -208,19 +296,24 @@ namespace ShadowSupply.Delivery
             if (success)
             {
                 Debug.Log(
-                    $"[FurnitureDeliverySystem] {message}",
+                    $"[FurnitureDeliverySystem] " +
+                    message,
                     this
                 );
             }
             else
             {
                 Debug.LogWarning(
-                    $"[FurnitureDeliverySystem] {message}",
+                    $"[FurnitureDeliverySystem] " +
+                    message,
                     this
                 );
             }
 
-            StatusChanged?.Invoke(message, success);
+            StatusChanged?.Invoke(
+                message,
+                success
+            );
         }
     }
 }
